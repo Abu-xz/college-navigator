@@ -4,7 +4,7 @@ import { NavigationPanel } from '@/components/UI/NavigationPanel';
 import { AdminPanel } from '@/components/Admin/AdminPanel';
 import { useNavigationStore } from '@/store/useNavigationStore';
 import { Menu, X, Map, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/UI/button';
 import { cn } from '@/lib/utils';
 
 const Index = () => {
