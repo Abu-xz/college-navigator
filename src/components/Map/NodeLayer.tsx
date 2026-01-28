@@ -102,7 +102,7 @@ export function NodeLayer({
             />
             
             {/* Node label */}
-            {showLabels && node.type !== 'WAYPOINT' && (
+            {showLabels && node.type !== 'WAYPOINT' &&  node.type !== 'ENTRANCE' && (
               <text
                 x={node.x}
                 y={node.y - size - 6}
