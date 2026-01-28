@@ -1,0 +1,281 @@
+import React, { useRef, useState, useCallback } from 'react';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { BuildingLayer } from './BuildingLayer';
+import { NodeLayer } from './NodeLayer';
+import { ConnectionLayer } from './ConnectionLayer';
+import { PathOverlay } from './PathOverlay';
+import { useNavigation } from '@/hooks/useNavigation';
+import { useAdminMode } from '@/hooks/useAdminMode';
+import { MapNode, Building } from '@/types/navigation';
+import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+interface MapCanvasProps {
+  width?: number;
+  height?: number;
+}
+
+const SVG_WIDTH = 1000;
+const SVG_HEIGHT = 600;
+
+export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [hoveredBuilding, setHoveredBuilding] = useState<string | null>(null);
+  const [hoveredNode, setHoveredNode] = useState<MapNode | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
+
+  const {
+    nodes,
+    buildings,
+    startNode,
+    endNode,
+    currentPath,
+    nodesOnCurrentFloor,
+    setStartNode,
+    setEndNode,
+  } = useNavigation();
+
+  const {
+    isAdminMode,
+    selectedNode,
+    isConnecting,
+    connectionStart,
+    selectNode,
+    handleMapClick,
+    createNodeAtPosition,
+  } = useAdminMode();
+
+  // Handle SVG click
+  const onSvgClick = useCallback(
+    (e: React.MouseEvent<SVGSVGElement>) => {
+      if (!svgRef.current) return;
+
+      const rect = svgRef.current.getBoundingClientRect();
+      const scaleX = SVG_WIDTH / rect.width;
+      const scaleY = SVG_HEIGHT / rect.height;
+      
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+
+      if (isAdminMode) {
+        handleMapClick(x, y, SVG_WIDTH, SVG_HEIGHT);
+      }
+    },
+    [isAdminMode, handleMapClick]
+  );
+
+  // Handle double click to create node in admin mode
+  const onSvgDoubleClick = useCallback(
+    (e: React.MouseEvent<SVGSVGElement>) => {
+      if (!isAdminMode || !svgRef.current) return;
+
+      const rect = svgRef.current.getBoundingClientRect();
+      const scaleX = SVG_WIDTH / rect.width;
+      const scaleY = SVG_HEIGHT / rect.height;
+      
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+
+      createNodeAtPosition(x, y);
+    },
+    [isAdminMode, createNodeAtPosition]
+  );
+
+  // Handle node click
+  const onNodeClick = useCallback(
+    (node: MapNode) => {
+      if (isAdminMode) {
+        selectNode(node);
+      } else {
+        // In navigation mode, set as start or end
+        if (!startNode) {
+          setStartNode(node);
+        } else if (!endNode) {
+          setEndNode(node);
+        } else {
+          // Reset and set as new start
+          setStartNode(node);
+          setEndNode(null);
+        }
+      }
+    },
+    [isAdminMode, selectNode, startNode, endNode, setStartNode, setEndNode]
+  );
+
+  // Handle building click
+  const onBuildingClick = useCallback(
+    (building: Building) => {
+      // Find the entrance of this building
+      const entrance = nodes.find(
+        (n) => n.buildingId === building.id && n.type === 'ENTRANCE'
+      );
+      if (entrance && !isAdminMode) {
+        if (!startNode) {
+          setStartNode(entrance);
+        } else if (!endNode) {
+          setEndNode(entrance);
+        }
+      }
+    },
+    [nodes, isAdminMode, startNode, endNode, setStartNode, setEndNode]
+  );
+
+  return (
+    <div className="relative w-full h-full bg-map-background rounded-lg overflow-hidden">
+      <TransformWrapper
+        initialScale={1}
+        minScale={0.5}
+        maxScale={3}
+        onTransformed={(_, state) => {
+          setZoomLevel(state.scale);
+        }}
+        wheel={{ step: 0.1 }}
+        pinch={{ step: 5 }}
+      >
+        {({ zoomIn, zoomOut, resetTransform }) => (
+          <>
+            {/* Zoom controls */}
+            <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={() => zoomIn()}
+                className="bg-card/90 backdrop-blur-sm shadow-md"
+              >
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={() => zoomOut()}
+                className="bg-card/90 backdrop-blur-sm shadow-md"
+              >
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={() => resetTransform()}
+                className="bg-card/90 backdrop-blur-sm shadow-md"
+              >
+                <Maximize2 className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* Zoom level indicator */}
+            <div className="absolute bottom-4 right-4 z-10 bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium text-muted-foreground shadow-md">
+              {Math.round(zoomLevel * 100)}%
+            </div>
+
+            <TransformComponent
+              wrapperStyle={{ width: '100%', height: '100%' }}
+              contentStyle={{ width: '100%', height: '100%' }}
+            >
+              <svg
+                ref={svgRef}
+                viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
+                className="w-full h-full"
+                onClick={onSvgClick}
+                onDoubleClick={onSvgDoubleClick}
+                style={{ cursor: isAdminMode ? (isConnecting ? 'crosshair' : 'default') : 'grab' }}
+              >
+                {/* Background pattern */}
+                <defs>
+                  <pattern
+                    id="grid"
+                    width="50"
+                    height="50"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <path
+                      d="M 50 0 L 0 0 0 50"
+                      fill="none"
+                      stroke="hsl(var(--border))"
+                      strokeWidth="0.5"
+                      opacity={0.5}
+                    />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+
+                {/* Outdoor paths (decorative) */}
+                <g className="outdoor-paths" opacity={0.3}>
+                  <path
+                    d="M 200 250 Q 300 280 400 300 Q 500 320 550 400"
+                    fill="none"
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeWidth={20}
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M 400 300 Q 550 300 600 300 Q 650 300 700 280"
+                    fill="none"
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeWidth={20}
+                    strokeLinecap="round"
+                  />
+                </g>
+
+                {/* Buildings */}
+                <BuildingLayer
+                  buildings={buildings}
+                  hoveredBuilding={hoveredBuilding}
+                  onBuildingHover={setHoveredBuilding}
+                  onBuildingClick={onBuildingClick}
+                />
+
+                {/* Connections (admin mode shows them prominently) */}
+                <ConnectionLayer
+                  nodes={nodesOnCurrentFloor}
+                  isAdminMode={isAdminMode}
+                  selectedNodeId={selectedNode?.id}
+                />
+
+                {/* Path overlay */}
+                {currentPath && <PathOverlay path={currentPath} />}
+
+                {/* Nodes */}
+                <NodeLayer
+                  nodes={nodesOnCurrentFloor}
+                  selectedNodeId={selectedNode?.id}
+                  startNodeId={startNode?.id}
+                  endNodeId={endNode?.id}
+                  isAdminMode={isAdminMode}
+                  isConnecting={isConnecting}
+                  connectionStartId={connectionStart?.id}
+                  onNodeClick={onNodeClick}
+                  onNodeHover={setHoveredNode}
+                  zoomLevel={zoomLevel}
+                />
+
+                {/* Connecting line preview */}
+                {isConnecting && connectionStart && hoveredNode && (
+                  <line
+                    x1={connectionStart.x}
+                    y1={connectionStart.y}
+                    x2={hoveredNode.x}
+                    y2={hoveredNode.y}
+                    stroke="hsl(var(--accent))"
+                    strokeWidth={2}
+                    strokeDasharray="8,4"
+                    pointerEvents="none"
+                  />
+                )}
+              </svg>
+            </TransformComponent>
+          </>
+        )}
+      </TransformWrapper>
+
+      {/* Hovered node tooltip */}
+      {hoveredNode && !isAdminMode && (
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 map-panel px-4 py-2 animate-fade-in">
+          <p className="text-sm font-medium">{hoveredNode.name}</p>
+          <p className="text-xs text-muted-foreground capitalize">
+            {hoveredNode.type.toLowerCase()}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}

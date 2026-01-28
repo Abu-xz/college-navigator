@@ -1,0 +1,109 @@
+import React, { useState } from 'react';
+import { MapCanvas } from '@/components/Map/MapCanvas';
+import { NavigationPanel } from '@/components/UI/NavigationPanel';
+import { AdminPanel } from '@/components/Admin/AdminPanel';
+import { useNavigationStore } from '@/store/useNavigationStore';
+import { Menu, X, Map, Info } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+const Index = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { isAdminMode } = useNavigationStore();
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      {/* Header */}
+      <header className="h-14 border-b border-border bg-card/80 backdrop-blur-md flex items-center justify-between px-4 z-30 relative">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="lg:hidden"
+          >
+            {isSidebarOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+              <Map className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="font-bold text-lg leading-none">CampusNav</h1>
+              <p className="text-xs text-muted-foreground">High-Precision Navigation</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isAdminMode && (
+            <span className="px-2 py-1 text-xs font-medium bg-warning/20 text-warning rounded-full">
+              Admin Mode
+            </span>
+          )}
+          <Button variant="ghost" size="icon">
+            <Info className="h-5 w-5" />
+          </Button>
+        </div>
+      </header>
+
+      {/* Main content */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar */}
+        <aside
+          className={cn(
+            'w-80 bg-card border-r border-border flex flex-col transition-all duration-300 z-20',
+            'absolute lg:relative inset-y-0 left-0 top-14 lg:top-0',
+            isSidebarOpen
+              ? 'translate-x-0'
+              : '-translate-x-full lg:translate-x-0 lg:w-0 lg:opacity-0'
+          )}
+        >
+          <div className="flex-1 overflow-y-auto scrollbar-thin p-4">
+            <NavigationPanel />
+          </div>
+
+          {/* Quick tips */}
+          <div className="p-4 border-t border-border bg-muted/30">
+            <p className="text-xs text-muted-foreground">
+              <strong>Tip:</strong> Click on buildings or nodes on the map to quickly select them as start/end points.
+            </p>
+          </div>
+        </aside>
+
+        {/* Overlay for mobile */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-10 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        {/* Map area */}
+        <main className="flex-1 relative overflow-hidden">
+          <MapCanvas />
+          <AdminPanel />
+          
+          {/* Mobile toggle for sidebar */}
+          {!isSidebarOpen && (
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={() => setIsSidebarOpen(true)}
+              className="absolute top-4 left-4 z-20 lg:hidden bg-card/90 backdrop-blur-sm shadow-md"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default Index;
