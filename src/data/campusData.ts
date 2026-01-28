@@ -299,7 +299,7 @@ export const initialNodes: MapNode[] = [
     floor: 0,
     buildingId: '',
     x: 350,
-    y: 280,
+    y: 290,
     connections: [],
   },
   {
@@ -351,6 +351,7 @@ export const initialConnections: [string, string][] = [
   ['art_lobby', 'art_studio'],
   // Outdoor connections
   ['eng_entrance', 'path_eng_sci'],
+  ['eng_entrance', 'plaza_north'],
   ['path_eng_sci', 'plaza_north'],
   ['sci_entrance', 'plaza_north'],
   ['plaza_north', 'plaza_main'],

@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useAdminMode } from '@/hooks/useAdminMode';
 import { useNavigationStore } from '@/store/useNavigationStore';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/UI/button';
 import { NodeType } from '@/types/navigation';
 import { cn } from '@/lib/utils';
 
