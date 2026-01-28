@@ -55,7 +55,7 @@ export function BuildingLayer({
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(var(--foreground))"
-              fontSize={14}
+              fontSize={8}
               fontWeight={600}
               className="pointer-events-none select-none"
             >

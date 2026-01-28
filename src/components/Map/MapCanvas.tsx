@@ -8,7 +8,7 @@ import { useNavigation } from "@/hooks/useNavigation";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { MapNode, Building } from "@/types/navigation";
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
-import { Button } from "@/components/UI/button";
+import { Button } from "@/components/ui/button";
 
 interface MapCanvasProps {
   width?: number;

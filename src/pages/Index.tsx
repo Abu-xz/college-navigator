@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { MapCanvas } from '@/components/Map/MapCanvas';
-import { NavigationPanel } from '@/components/UI/NavigationPanel';
-import { AdminPanel } from '@/components/Admin/AdminPanel';
-import { useNavigationStore } from '@/store/useNavigationStore';
-import { Menu, X, Map, Info } from 'lucide-react';
-import { Button } from '@/components/UI/button';
-import { cn } from '@/lib/utils';
+import React, { useState } from "react";
+import { MapCanvas } from "@/components/Map/MapCanvas";
+import { NavigationPanel } from "@/components/ui/NavigationPanel";
+import { AdminPanel } from "@/components/Admin/AdminPanel";
+import { useNavigationStore } from "@/store/useNavigationStore";
+import { Menu, X, Map, Info, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useAdminMode } from "@/hooks/useAdminMode";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { isAdminMode } = useNavigationStore();
+  const { toggleAdminMode } = useAdminMode();
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -28,14 +30,16 @@ const Index = () => {
               <Menu className="h-5 w-5" />
             )}
           </Button>
-          
+
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
               <Map className="h-4 w-4 text-primary-foreground" />
             </div>
             <div>
               <h1 className="font-bold text-lg leading-none">CampusNav</h1>
-              <p className="text-xs text-muted-foreground">High-Precision Navigation</p>
+              <p className="text-xs text-muted-foreground">
+                High-Precision Navigation
+              </p>
             </div>
           </div>
         </div>
@@ -46,6 +50,17 @@ const Index = () => {
               Admin Mode
             </span>
           )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleAdminMode}
+            className="bg-card/90 backdrop-blur-sm shadow-md"
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            Admin Mode
+          </Button>
+
           <Button variant="ghost" size="icon">
             <Info className="h-5 w-5" />
           </Button>
@@ -57,11 +72,11 @@ const Index = () => {
         {/* Sidebar */}
         <aside
           className={cn(
-            'w-80 bg-card border-r border-border flex flex-col transition-all duration-300 z-20',
-            'absolute lg:relative inset-y-0 left-0 top-14 lg:top-0',
+            "w-80 bg-card border-r border-border flex flex-col transition-all duration-300 z-20",
+            "absolute lg:relative inset-y-0 left-0 top-14 lg:top-0",
             isSidebarOpen
-              ? 'translate-x-0'
-              : '-translate-x-full lg:translate-x-0 lg:w-0 lg:opacity-0'
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0 lg:w-0 lg:opacity-0",
           )}
         >
           <div className="flex-1 overflow-y-auto scrollbar-thin p-4">
@@ -71,7 +86,8 @@ const Index = () => {
           {/* Quick tips */}
           <div className="p-4 border-t border-border bg-muted/30">
             <p className="text-xs text-muted-foreground">
-              <strong>Tip:</strong> Click on buildings or nodes on the map to quickly select them as start/end points.
+              <strong>Tip:</strong> Click on buildings or nodes on the map to
+              quickly select them as start/end points.
             </p>
           </div>
         </aside>
@@ -88,7 +104,7 @@ const Index = () => {
         <main className="flex-1 relative overflow-hidden">
           <MapCanvas />
           <AdminPanel />
-          
+
           {/* Mobile toggle for sidebar */}
           {!isSidebarOpen && (
             <Button
