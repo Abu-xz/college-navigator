@@ -1,9 +1,9 @@
 import React from 'react';
 import { ArrowUpDown, X, Navigation } from 'lucide-react';
-import { LocationSelector } from './LocationSelector';
-import { InfoPanel } from './InfoPanel';
 import { useNavigation } from '@/hooks/useNavigation';
 import { Button } from '@/components/ui/button';
+import { LocationSelector } from './LocationSelector';
+import { InfoPanel } from './InfoPanel';
 
 export function NavigationPanel() {
   const {
