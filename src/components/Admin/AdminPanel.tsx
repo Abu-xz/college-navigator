@@ -60,29 +60,6 @@ export function AdminPanel() {
           </Button>
         </div>
 
-        {/* Floor selector */}
-        <div className="mb-4">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-            Floor
-          </p>
-          <div className="flex gap-1">
-            {[0, 1, 2, 3].map((floor) => (
-              <button
-                key={floor}
-                onClick={() => setCurrentFloor(floor)}
-                className={cn(
-                  "flex-1 py-1.5 text-sm font-medium rounded-md transition-colors",
-                  currentFloor === floor
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80",
-                )}
-              >
-                {floor === 0 ? "GF" : `F${floor}`}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Instructions */}
         <div className="mb-4 p-3 bg-muted/50 rounded-lg">
           <p className="text-xs text-muted-foreground">

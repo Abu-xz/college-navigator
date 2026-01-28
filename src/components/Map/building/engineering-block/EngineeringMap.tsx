@@ -1,14 +1,13 @@
 import React, { useRef, useState, useCallback } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { BuildingLayer } from "./BuildingLayer";
-import { NodeLayer } from "./NodeLayer";
-import { ConnectionLayer } from "./ConnectionLayer";
-import { PathOverlay } from "./PathOverlay";
-import { useNavigation } from "@/hooks/useNavigation";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { MapNode, Building } from "@/types/navigation";
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PathOverlay } from "../../PathOverlay";
+import { ConnectionLayer } from "../../ConnectionLayer";
+import { NodeLayer } from "../../NodeLayer";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 
 interface MapCanvasProps {
   width?: number;
@@ -18,22 +17,20 @@ interface MapCanvasProps {
 const SVG_WIDTH = 1000;
 const SVG_HEIGHT = 600;
 
-export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
+export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [hoveredBuilding, setHoveredBuilding] = useState<string | null>(null);
   const [hoveredNode, setHoveredNode] = useState<MapNode | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
 
   const {
     nodes,
-    buildings,
     startNode,
     endNode,
     currentPath,
     nodesOnCurrentFloor,
     setStartNode,
     setEndNode,
-  } = useNavigation();
+  } = useBlockNavigation();
 
   const {
     isAdminMode,
@@ -48,7 +45,8 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
   // Handle SVG click
   const onSvgClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
-      console.log("triggered svg click")
+      console.log("triggered svg click");
+
       if (!svgRef.current) return;
 
       const rect = svgRef.current.getBoundingClientRect();
@@ -57,6 +55,9 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
 
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
+
+      console.log(Math.round(x), Math.round(y));
+      console.log();
 
       if (isAdminMode) {
         handleMapClick(x, y, SVG_WIDTH, SVG_HEIGHT);
@@ -68,7 +69,8 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
   // Handle double click to create node in admin mode
   const onSvgDoubleClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
-      console.log("triggered double click")
+      console.log("triggered double click");
+
       if (!isAdminMode || !svgRef.current) return;
 
       const rect = svgRef.current.getBoundingClientRect();
@@ -174,132 +176,97 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
               contentStyle={{ width: "100%", height: "100%" }}
             >
               <svg
-                ref={svgRef}
-                viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-                className="w-full h-full"
-                onClick={onSvgClick}
-                onDoubleClick={onSvgDoubleClick}
-                style={{
-                  cursor: isAdminMode
-                    ? isConnecting
-                      ? "crosshair"
-                      : "default"
-                    : "grab",
-                }}
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1200 650"
               >
-                {/* Background pattern */}
                 <defs>
-                  <pattern
-                    id="grid"
-                    width="50"
-                    height="50"
-                    patternUnits="userSpaceOnUse"
-                  >
-                    <path
-                      d="M 50 0 L 0 0 0 50"
-                      fill="none"
-                      stroke="hsl(var(--border))"
-                      strokeWidth="0.5"
-                      opacity={0.5}
-                    />
-                  </pattern>
+                  <style>
+                    {`
+      .st0 { stroke-width: 1.61px; }
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7 {
+        fill: none;
+        stroke: #111111;
+        stroke-miterlimit: 10;
+      }
+      .st1 { stroke-width: 1.23px; }
+      .st2 { stroke-width: 1.31px; }
+      .st3 { stroke-width: 8.34px; }
+      .st4 { stroke-width: 8.38px; }
+      .st5 { stroke-width: 1.48px; }
+      .st6 { stroke-width: 1.43px; }
+      .st7 { stroke-width: 1.39px; }
+      `}
+                  </style>
                 </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
 
-                {/* Outdoor paths (decorative) */}
-                <g className="outdoor-paths" opacity={0.3}>
-                  <path
-                    d="M 460 207 Q 493 207 551 210 Q 551 250 551 308"
-                    fill="none"
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={20}
-                    strokeLinecap="round"
-                  />
-
-                  <path
-                    d="M 550 211 Q 778 207 945 206"
-                    fill="none"
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={20}
-                    strokeLinecap="round"
-                  />
-
-                  <path
-                    d="M 490 308 Q 524 308 551 308 "
-                    fill="none"
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={20}
-                    strokeLinecap="round"
-                  />
-
-                  <path
-                    d="M 248 249 L 348 123 L 461 118 Q 460 170 460 207 "
-                    fill="none"
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={20}
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M 83 214 L 82 168 L 83 128 Q 214 122 349 123 "
-                    fill="none"
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={20}
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M 798 209 C 656 210 666 210 664 79"
-                    fill="none"
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={20}
-                    strokeLinecap="round"
-                  />
-                </g>
-
-                {/* Buildings */}
-                <BuildingLayer
-                  buildings={buildings}
-                  hoveredBuilding={hoveredBuilding}
-                  onBuildingHover={setHoveredBuilding}
-                  onBuildingClick={onBuildingClick}
+                <polyline
+                  className="st3"
+                  points="1046.48 151.98 1046.48 260.46 1089.26 260.46 1089.26 498.02 941.06 498.02 941.06 372.74 941.06 430.79 857.81 430.79 941.06 430.79 941.06 498.02 831.07 498.02 706.56 498.02 706.56 397.19 576.71 397.19 706.56 397.19 706.56 498.02 555.58 498.02 555.58 394.89 467.12 394.89 555.58 394.89 555.58 498.02 336.85 498.02 336.85 419.34 439.96 419.34 439.96 394.89 439.96 419.34 261.98 419.34 336.85 419.34 336.85 498.02 110.74 498.02 110.74 375.03 229.14 375.03 229.14 393.36 400.66 393.36 313.17 393.36 313.17 368.17 313.17 393.36 229.14 393.36 229.14 347.54 356.71 347.54 229.14 347.54 229.14 375.03 110.74 375.03 110.74 260.46 110.74 151.98 110.74 260.46 229.91 260.46 229.91 325.07 354.42 325.07 229.91 325.07 229.91 260.46 353.66 260.46 353.66 300.94 353.66 151.98"
                 />
 
-                {/* Connections (admin mode shows them prominently) */}
-                <ConnectionLayer
-                  nodes={nodesOnCurrentFloor}
-                  isAdminMode={isAdminMode}
-                  selectedNodeId={selectedNode?.id}
+                <path className="st3" d="M834.67 393.11 L834.67 495.1" />
+
+                <polyline
+                  className="st3"
+                  points="445.7 151.98 445.7 262.36 731 262.36 680.09 262.36 680.09 151.98 680.09 327.29 680.09 262.36 445.7 262.36 445.7 325 651.94 325 654.99 325"
                 />
 
-                {/* Path overlay */}
-                {currentPath && <PathOverlay path={currentPath} />}
+                <path className="st3" d="M720.69 334.55 L828.39 334.55" />
 
-                {/* Nodes */}
-                <NodeLayer
-                  nodes={nodesOnCurrentFloor}
-                  selectedNodeId={selectedNode?.id}
-                  startNodeId={startNode?.id}
-                  endNodeId={endNode?.id}
-                  isAdminMode={isAdminMode}
-                  isConnecting={isConnecting}
-                  connectionStartId={connectionStart?.id}
-                  onNodeClick={onNodeClick}
-                  onNodeHover={setHoveredNode}
-                  zoomLevel={zoomLevel}
+                <polyline
+                  className="st3"
+                  points="815.03 261.6 865.83 261.6 865.83 300.18 923.12 300.18 865.83 300.18 865.83 261.6 941.45 261.6 941.45 350.21 941.45 153.9 866.2 153.9 866.2 239.64"
                 />
 
-                {/* Connecting line preview */}
-                {isConnecting && connectionStart && hoveredNode && (
-                  <line
-                    x1={connectionStart.x}
-                    y1={connectionStart.y}
-                    x2={hoveredNode.x}
-                    y2={hoveredNode.y}
-                    stroke="hsl(var(--accent))"
-                    strokeWidth={20}
-                    strokeDasharray="8,4"
-                    pointerEvents="none"
-                  />
-                )}
+                <path className="st4" d="M106.5 151.98 L684.17 151.98" />
+
+                <path
+                  className="st1"
+                  d="
+    M353.66 260.46 L445.7 260.46
+    M353.66 248.3  L445.7 248.3
+    M353.66 236.15 L445.7 236.15
+    M353.66 223.99 L445.7 223.99
+    M353.66 211.83 L445.7 211.83
+    M353.66 199.68 L445.7 199.68
+    M353.66 187.52 L445.7 187.52
+    M353.66 175.37 L445.7 175.37"
+                />
+
+                <path className="st7" d="M399.68 151.98 L399.68 260.45" />
+
+                <path
+                  className="st2"
+                  d="
+    M941.45 260.46 L1046.14 260.46
+    M941.45 248.3  L1046.14 248.3
+    M941.45 236.15 L1046.14 236.15
+    M941.45 223.99 L1046.14 223.99
+    M941.45 211.83 L1046.14 211.83
+    M941.45 199.68 L1046.14 199.68
+    M941.45 187.52 L1046.14 187.52
+    M941.45 175.37 L1046.14 175.37"
+                />
+
+                <path className="st5" d="M993.8 151.98 L993.8 260.45" />
+
+                <path
+                  className="st6"
+                  d="
+    M834.67 394.17 L705.51 394.17
+    M834.67 405.81 L705.51 405.81
+    M834.67 417.45 L705.51 417.45
+    M834.67 429.08 L705.51 429.08
+    M834.67 440.72 L705.51 440.72
+    M834.67 452.36 L705.51 452.36
+    M834.67 463.99 L705.51 463.99
+    M834.67 475.63 L705.51 475.63"
+                />
+
+                <path className="st0" d="M770.09 498.02 L770.09 394.17" />
+
+                <path className="st3" d="M1050.61 153.9 L945.43 153.9" />
               </svg>
             </TransformComponent>
           </>
