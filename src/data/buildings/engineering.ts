@@ -303,7 +303,7 @@ export const initialNodes: MapNode[] = [
     y: 408,
     connections: [],
   },
-   {
+  {
     id: "Corridor7",
     type: "WAYPOINT",
     name: "Corridor Pathway",
@@ -313,7 +313,7 @@ export const initialNodes: MapNode[] = [
     y: 360,
     connections: [],
   },
-   {
+  {
     id: "Corridor8",
     type: "WAYPOINT",
     name: "Corridor Pathway",
@@ -331,6 +331,16 @@ export const initialNodes: MapNode[] = [
     buildingId: "engineering",
     x: 800,
     y: 360,
+    connections: [],
+  },
+   {
+    id: "Corridor8.5",
+    type: "WAYPOINT",
+    name: "Corridor Pathway",
+    floor: 0,
+    buildingId: "engineering",
+    x: 420,
+    y: 335,
     connections: [],
   },
   {
@@ -356,7 +366,44 @@ export const initialNodes: MapNode[] = [
 ];
 
 // Pre-computed connections
-export const initialConnections: [string, string][] = [["entrance", "eng_101"]];
+export const initialConnections: [string, string][] = 
+[
+  ["entrance", "walkway1"],
+  ["walkway1", "walkway2"],
+  ["walkway1", "walkway3"],
+  ["walkway2", "Corridor1"],
+  ["Corridor1", "Corridor2"],
+  ["Corridor2", "Corridor3"],
+  ["Corridor3", "Corridor4"],
+  ["Corridor4", "Corridor5"],
+  ["Corridor5", "Corridor6"],
+  ["Corridor4", "Corridor7"],
+  ["Corridor4", "Corridor8"],
+  ["Corridor9", "Corridor10"],
+  ["Corridor1", "Corridor10"],
+  ["Corridor10", "Corridor11"],
+  ["walkway3", "Corridor9"],
+  ["walkway3", "Corridor10"],
+  ["walkway3", "Corridor11"],
+  ["Corridor10", "library_entrance"],
+  ["Corridor10", "store_entrance"],
+  ["walkway1", "physical-room_entrance"],
+  ["walkway2", "powerlab_entrance"],
+  ["Corridor2", "iedc_entrance"],
+  ["Corridor3", "microcontroller_entrance"],
+  ["Corridor6", "circuit_entrance"],
+  ["Corridor7", "nss_entrance"],
+  ["Corridor8", "classroom_entrance"],
+  ["Corridor11", "toilet_entrance"],
+  ["Corridor8.5", "digital_entrance"],
+  ["Corridor8", "left_stairs"],
+  ["left_stairs", "left_stairs2"],
+  ["Corridor9", "middle_stairs"],
+  ["middle_stairs", "middle_stairs2"],
+  ["middle_stairs2", "middle_stairs3"],
+  ["middle_stairs3", "middle_stairs4"],
+  ["right_stairs", "right_stairs2"],
+];
 
 // Rooms list for search
 export const rooms: Room[] = [
