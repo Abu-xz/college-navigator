@@ -409,6 +409,8 @@ export const initialConnections: [string, string][] = [
   ["waypoint_1", "waypoint_2"],
   ["waypoint_1", "girls_hostel"],
   ["waypoint_2", "boys_hostel"],
+
+  
   ["administration_block", "admin_entrance"],
   ["inn_station", "innstation_entrance"],
   ["workshop_1", "workshop2_entrance"],
