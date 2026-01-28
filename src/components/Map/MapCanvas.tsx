@@ -1,14 +1,14 @@
-import React, { useRef, useState, useCallback } from 'react';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import { BuildingLayer } from './BuildingLayer';
-import { NodeLayer } from './NodeLayer';
-import { ConnectionLayer } from './ConnectionLayer';
-import { PathOverlay } from './PathOverlay';
-import { useNavigation } from '@/hooks/useNavigation';
-import { useAdminMode } from '@/hooks/useAdminMode';
-import { MapNode, Building } from '@/types/navigation';
-import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useRef, useState, useCallback } from "react";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { BuildingLayer } from "./BuildingLayer";
+import { NodeLayer } from "./NodeLayer";
+import { ConnectionLayer } from "./ConnectionLayer";
+import { PathOverlay } from "./PathOverlay";
+import { useNavigation } from "@/hooks/useNavigation";
+import { useAdminMode } from "@/hooks/useAdminMode";
+import { MapNode, Building } from "@/types/navigation";
+import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
+import { Button } from "@/components/UI/button";
 
 interface MapCanvasProps {
   width?: number;
@@ -53,7 +53,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
       const rect = svgRef.current.getBoundingClientRect();
       const scaleX = SVG_WIDTH / rect.width;
       const scaleY = SVG_HEIGHT / rect.height;
-      
+
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
 
@@ -61,7 +61,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
         handleMapClick(x, y, SVG_WIDTH, SVG_HEIGHT);
       }
     },
-    [isAdminMode, handleMapClick]
+    [isAdminMode, handleMapClick],
   );
 
   // Handle double click to create node in admin mode
@@ -72,13 +72,13 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
       const rect = svgRef.current.getBoundingClientRect();
       const scaleX = SVG_WIDTH / rect.width;
       const scaleY = SVG_HEIGHT / rect.height;
-      
+
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
 
       createNodeAtPosition(x, y);
     },
-    [isAdminMode, createNodeAtPosition]
+    [isAdminMode, createNodeAtPosition],
   );
 
   // Handle node click
@@ -99,7 +99,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
         }
       }
     },
-    [isAdminMode, selectNode, startNode, endNode, setStartNode, setEndNode]
+    [isAdminMode, selectNode, startNode, endNode, setStartNode, setEndNode],
   );
 
   // Handle building click
@@ -107,7 +107,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
     (building: Building) => {
       // Find the entrance of this building
       const entrance = nodes.find(
-        (n) => n.buildingId === building.id && n.type === 'ENTRANCE'
+        (n) => n.buildingId === building.id && n.type === "ENTRANCE",
       );
       if (entrance && !isAdminMode) {
         if (!startNode) {
@@ -117,7 +117,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
         }
       }
     },
-    [nodes, isAdminMode, startNode, endNode, setStartNode, setEndNode]
+    [nodes, isAdminMode, startNode, endNode, setStartNode, setEndNode],
   );
 
   return (
@@ -168,8 +168,8 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
             </div>
 
             <TransformComponent
-              wrapperStyle={{ width: '100%', height: '100%' }}
-              contentStyle={{ width: '100%', height: '100%' }}
+              wrapperStyle={{ width: "100%", height: "100%" }}
+              contentStyle={{ width: "100%", height: "100%" }}
             >
               <svg
                 ref={svgRef}
@@ -177,7 +177,13 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
                 className="w-full h-full"
                 onClick={onSvgClick}
                 onDoubleClick={onSvgDoubleClick}
-                style={{ cursor: isAdminMode ? (isConnecting ? 'crosshair' : 'default') : 'grab' }}
+                style={{
+                  cursor: isAdminMode
+                    ? isConnecting
+                      ? "crosshair"
+                      : "default"
+                    : "grab",
+                }}
               >
                 {/* Background pattern */}
                 <defs>
@@ -201,14 +207,45 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
                 {/* Outdoor paths (decorative) */}
                 <g className="outdoor-paths" opacity={0.3}>
                   <path
-                    d="M 200 250 Q 300 280 400 300 Q 500 320 550 400"
+                    d="M 460 207 Q 493 207 551 210 Q 551 250 551 288 "
+                    fill="none"
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeWidth={20}
+                    strokeLinecap="round"
+                  />
+
+                  <path
+                    d="M 550 211 Q 778 207 945 206"
+                    fill="none"
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeWidth={20}
+                    strokeLinecap="round"
+                  />
+
+                  <path
+                    d="M 490 291 Q 523 292 551 288 "
+                    fill="none"
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeWidth={20}
+                    strokeLinecap="round"
+                  />
+
+                  <path
+                    d="M 248 249 L 348 123 L 461 118 Q 460 170 460 207 "
                     fill="none"
                     stroke="hsl(var(--muted-foreground))"
                     strokeWidth={20}
                     strokeLinecap="round"
                   />
                   <path
-                    d="M 400 300 Q 550 300 600 300 Q 650 300 700 280"
+                    d="M 83 214 L 82 168 L 83 128 Q 214 122 349 123 "
+                    fill="none"
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeWidth={20}
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M 778 207 Q 672 208 671 136"
                     fill="none"
                     stroke="hsl(var(--muted-foreground))"
                     strokeWidth={20}
@@ -256,7 +293,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
                     x2={hoveredNode.x}
                     y2={hoveredNode.y}
                     stroke="hsl(var(--accent))"
-                    strokeWidth={2}
+                    strokeWidth={20}
                     strokeDasharray="8,4"
                     pointerEvents="none"
                   />
