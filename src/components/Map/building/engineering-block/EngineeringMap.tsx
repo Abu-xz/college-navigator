@@ -54,8 +54,8 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
 
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
+      
       console.log(Math.round(x), Math.round(y));
-
       if (isAdminMode) {
         handleMapClick(x, y, SVG_WIDTH, SVG_HEIGHT);
       }
@@ -267,6 +267,30 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                 <path className="st0" d="M770.09 498.02 L770.09 394.17" />
 
                 <path className="st3" d="M1050.61 153.9 L945.43 153.9" />
+
+                {/* Connections (admin mode shows them prominently) */}
+                                <ConnectionLayer
+                                  nodes={nodesOnCurrentFloor}
+                                  isAdminMode={isAdminMode}
+                                  selectedNodeId={selectedNode?.id}
+                                />
+                
+                                {/* Path overlay */}
+                                {currentPath && <PathOverlay path={currentPath} />}
+                
+                                {/* Nodes */}
+                                <NodeLayer
+                                  nodes={nodesOnCurrentFloor}
+                                  selectedNodeId={selectedNode?.id}
+                                  startNodeId={startNode?.id}
+                                  endNodeId={endNode?.id}
+                                  isAdminMode={isAdminMode}
+                                  isConnecting={isConnecting}
+                                  connectionStartId={connectionStart?.id}
+                                  onNodeClick={onNodeClick}
+                                  onNodeHover={setHoveredNode}
+                                  zoomLevel={zoomLevel}
+                                />
               </svg>
             </TransformComponent>
           </>
