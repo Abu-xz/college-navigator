@@ -179,6 +179,8 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                 id="Layer_1"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 1200 650"
+                onClick={onSvgClick}
+                onDoubleClick={onSvgDoubleClick}
               >
                 <defs>
                   <style>
