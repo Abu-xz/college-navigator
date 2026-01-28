@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { EngineeringMap } from "@/components/Map/building/engineering-block/EngineeringMap";
 import { AdminPanel } from "@/components/Admin/AdminPanel";
+import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -103,7 +104,7 @@ const EngineeringBlock = () => {
           )}
         >
           <div className="flex-1 overflow-y-auto scrollbar-thin p-4">
-            <NavigationPanel />
+            <BlockNavigationPanel />
           </div>
         </aside>
 
