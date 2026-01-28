@@ -77,7 +77,6 @@ export function NodeLayer({
                 stroke={fillColor}
                 strokeWidth={2}
                 opacity={0.5}
-                className="marker-pulse"
               />
             )}
             
