@@ -46,7 +46,6 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
   const onSvgClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
       console.log("triggered svg click");
-
       if (!svgRef.current) return;
 
       const rect = svgRef.current.getBoundingClientRect();
@@ -55,9 +54,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
 
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
-
       console.log(Math.round(x), Math.round(y));
-      console.log();
 
       if (isAdminMode) {
         handleMapClick(x, y, SVG_WIDTH, SVG_HEIGHT);
@@ -181,6 +178,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                 viewBox="0 0 1200 650"
                 onClick={onSvgClick}
                 onDoubleClick={onSvgDoubleClick}
+                ref={svgRef}
               >
                 <defs>
                   <style>
