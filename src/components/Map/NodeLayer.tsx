@@ -77,7 +77,6 @@ export function NodeLayer({
                 stroke={fillColor}
                 strokeWidth={2}
                 opacity={0.5}
-                className="marker-pulse"
               />
             )}
             
@@ -103,7 +102,7 @@ export function NodeLayer({
             />
             
             {/* Node label */}
-            {showLabels && node.type !== 'WAYPOINT' && (
+            {showLabels && node.type !== 'WAYPOINT' &&  node.type !== 'ENTRANCE' && (
               <text
                 x={node.x}
                 y={node.y - size - 6}
