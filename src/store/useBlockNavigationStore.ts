@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { MapNode, PathResult, Building, Room } from '@/types/navigation';
-import { initialNodes, initialConnections, buildings, rooms } from '@/data/buildings/engineering';
+import { initialNodes, initialConnections, buildings, rooms } from '@/data/buildings/engineeringData';
 import { findShortestPath } from '@/engine/dijkstra';
 import { connectNodes, addNode, removeNode, disconnectNodes, generateNodeId } from '@/engine/graphUtils';
 
