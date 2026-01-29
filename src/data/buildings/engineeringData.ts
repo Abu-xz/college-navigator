@@ -56,7 +56,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "powerlab_entrance",
     type: "ROOM",
-    name: "Power Electronics Lab Entrance",
+    name: "010 Power Electronics Lab Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 666,
@@ -66,7 +66,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "iedc_entrance",
     type: "ROOM",
-    name: "IEDC Room Entrance",
+    name: "011 IEDC Room Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 570,
@@ -76,7 +76,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "microcontroller_entrance",
     type: "ROOM",
-    name: "Microcontroller Lab Entrance",
+    name: "012 Microcontroller Lab Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 455,
@@ -86,7 +86,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "circuit_entrance",
     type: "ROOM",
-    name: "Circuit Lab Entrance",
+    name: "013 Circuit Lab Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 270,
@@ -96,7 +96,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "nss_entrance",
     type: "ROOM",
-    name: "NSS Room Entrance",
+    name: "014 NSS Room Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 315,
@@ -106,7 +106,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "digital_entrance",
     type: "ROOM",
-    name: "Digital Lab Entrance",
+    name: "015 Digital Lab Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 230,
@@ -116,7 +116,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "classroom_entrance",
     type: "ROOM",
-    name: "Classroom Entrance",
+    name: "016 Classroom Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 350,
@@ -146,7 +146,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "physical-room_entrance",
     type: "ROOM",
-    name: "Physical Room Entrance",
+    name: "017 Physical Room Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 865,
@@ -156,7 +156,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "library_entrance",
     type: "ROOM",
-    name: "Library Entrance",
+    name: "018 Library Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 940,
@@ -166,7 +166,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "store_entrance",
     type: "ROOM",
-    name: "Store Entrance",
+    name: "019 Store Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 930,
@@ -176,7 +176,7 @@ export const initialNodes: MapNode[] = [
   {
     id: "toilet_entrance",
     type: "ROOM",
-    name: "Toilet Entrance",
+    name: "020 Toilet Entrance",
     floor: 0,
     buildingId: "engineering",
     x: 850,
