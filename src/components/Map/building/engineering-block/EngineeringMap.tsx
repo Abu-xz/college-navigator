@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { MapNode, Building } from "@/types/navigation";
@@ -30,6 +30,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
     nodesOnCurrentFloor,
     setStartNode,
     setEndNode,
+    currentFloor,
   } = useBlockNavigation();
 
   const {
@@ -41,6 +42,10 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
     handleMapClick,
     createNodeAtPosition,
   } = useAdminMode();
+
+  useEffect(() => {
+    console.log("currentFloor", currentFloor);
+  }, [currentFloor]);
 
   // Handle SVG click
   const onSvgClick = useCallback(
@@ -54,7 +59,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
 
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
-      
+
       console.log(Math.round(x), Math.round(y));
       if (isAdminMode) {
         handleMapClick(x, y, SVG_WIDTH, SVG_HEIGHT);
@@ -200,30 +205,32 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                   </style>
                 </defs>
 
-                <polyline
-                  className="st3"
-                  points="1046.48 151.98 1046.48 260.46 1089.26 260.46 1089.26 498.02 941.06 498.02 941.06 372.74 941.06 430.79 857.81 430.79 941.06 430.79 941.06 498.02 831.07 498.02 706.56 498.02 706.56 397.19 576.71 397.19 706.56 397.19 706.56 498.02 555.58 498.02 555.58 394.89 467.12 394.89 555.58 394.89 555.58 498.02 336.85 498.02 336.85 419.34 439.96 419.34 439.96 394.89 439.96 419.34 261.98 419.34 336.85 419.34 336.85 498.02 110.74 498.02 110.74 375.03 229.14 375.03 229.14 393.36 400.66 393.36 313.17 393.36 313.17 368.17 313.17 393.36 229.14 393.36 229.14 347.54 356.71 347.54 229.14 347.54 229.14 375.03 110.74 375.03 110.74 260.46 110.74 151.98 110.74 260.46 229.91 260.46 229.91 325.07 354.42 325.07 229.91 325.07 229.91 260.46 353.66 260.46 353.66 300.94 353.66 151.98"
-                />
+                {currentFloor === 0 ? (
+                  <>
+                    <polyline
+                      className="st3"
+                      points="1046.48 151.98 1046.48 260.46 1089.26 260.46 1089.26 498.02 941.06 498.02 941.06 372.74 941.06 430.79 857.81 430.79 941.06 430.79 941.06 498.02 831.07 498.02 706.56 498.02 706.56 397.19 576.71 397.19 706.56 397.19 706.56 498.02 555.58 498.02 555.58 394.89 467.12 394.89 555.58 394.89 555.58 498.02 336.85 498.02 336.85 419.34 439.96 419.34 439.96 394.89 439.96 419.34 261.98 419.34 336.85 419.34 336.85 498.02 110.74 498.02 110.74 375.03 229.14 375.03 229.14 393.36 400.66 393.36 313.17 393.36 313.17 368.17 313.17 393.36 229.14 393.36 229.14 347.54 356.71 347.54 229.14 347.54 229.14 375.03 110.74 375.03 110.74 260.46 110.74 151.98 110.74 260.46 229.91 260.46 229.91 325.07 354.42 325.07 229.91 325.07 229.91 260.46 353.66 260.46 353.66 300.94 353.66 151.98"
+                    />
 
-                <path className="st3" d="M834.67 393.11 L834.67 495.1" />
+                    <path className="st3" d="M834.67 393.11 L834.67 495.1" />
 
-                <polyline
-                  className="st3"
-                  points="445.7 151.98 445.7 262.36 731 262.36 680.09 262.36 680.09 151.98 680.09 327.29 680.09 262.36 445.7 262.36 445.7 325 651.94 325 654.99 325"
-                />
+                    <polyline
+                      className="st3"
+                      points="445.7 151.98 445.7 262.36 731 262.36 680.09 262.36 680.09 151.98 680.09 327.29 680.09 262.36 445.7 262.36 445.7 325 651.94 325 654.99 325"
+                    />
 
-                <path className="st3" d="M720.69 334.55 L828.39 334.55" />
+                    <path className="st3" d="M720.69 334.55 L828.39 334.55" />
 
-                <polyline
-                  className="st3"
-                  points="815.03 261.6 865.83 261.6 865.83 300.18 923.12 300.18 865.83 300.18 865.83 261.6 941.45 261.6 941.45 350.21 941.45 153.9 866.2 153.9 866.2 239.64"
-                />
+                    <polyline
+                      className="st3"
+                      points="815.03 261.6 865.83 261.6 865.83 300.18 923.12 300.18 865.83 300.18 865.83 261.6 941.45 261.6 941.45 350.21 941.45 153.9 866.2 153.9 866.2 239.64"
+                    />
 
-                <path className="st4" d="M106.5 151.98 L684.17 151.98" />
+                    <path className="st4" d="M106.5 151.98 L684.17 151.98" />
 
-                <path
-                  className="st1"
-                  d="
+                    <path
+                      className="st1"
+                      d="
     M353.66 260.46 L445.7 260.46
     M353.66 248.3  L445.7 248.3
     M353.66 236.15 L445.7 236.15
@@ -232,13 +239,13 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
     M353.66 199.68 L445.7 199.68
     M353.66 187.52 L445.7 187.52
     M353.66 175.37 L445.7 175.37"
-                />
+                    />
 
-                <path className="st7" d="M399.68 151.98 L399.68 260.45" />
+                    <path className="st7" d="M399.68 151.98 L399.68 260.45" />
 
-                <path
-                  className="st2"
-                  d="
+                    <path
+                      className="st2"
+                      d="
     M941.45 260.46 L1046.14 260.46
     M941.45 248.3  L1046.14 248.3
     M941.45 236.15 L1046.14 236.15
@@ -247,13 +254,13 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
     M941.45 199.68 L1046.14 199.68
     M941.45 187.52 L1046.14 187.52
     M941.45 175.37 L1046.14 175.37"
-                />
+                    />
 
-                <path className="st5" d="M993.8 151.98 L993.8 260.45" />
+                    <path className="st5" d="M993.8 151.98 L993.8 260.45" />
 
-                <path
-                  className="st6"
-                  d="
+                    <path
+                      className="st6"
+                      d="
     M834.67 394.17 L705.51 394.17
     M834.67 405.81 L705.51 405.81
     M834.67 417.45 L705.51 417.45
@@ -262,35 +269,117 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
     M834.67 452.36 L705.51 452.36
     M834.67 463.99 L705.51 463.99
     M834.67 475.63 L705.51 475.63"
-                />
+                    />
 
-                <path className="st0" d="M770.09 498.02 L770.09 394.17" />
+                    <path className="st0" d="M770.09 498.02 L770.09 394.17" />
 
-                <path className="st3" d="M1050.61 153.9 L945.43 153.9" />
+                    <path className="st3" d="M1050.61 153.9 L945.43 153.9" />
+                  </>
+                ) : (
+                  <>
+                    <path
+                      className="st1"
+                      d="
+    M694.36 229.02 L799.04 229.02
+    M694.36 214.75 L799.04 214.75
+    M694.36 200.47 L799.04 200.47
+    M694.36 186.2  L799.04 186.2
+    M694.36 171.93 L799.04 171.93
+    M694.36 157.65 L799.04 157.65
+    M694.36 143.38 L799.04 143.38
+    M694.36 129.11 L799.04 129.11"
+                    />
+                    <path className="st1" d="M746.7 101.65 L746.7 229.03" />
+
+                    <path
+                      className="st2"
+                      d="
+    M481.75 471.6 L349.87 471.6
+    M481.75 483.56 L349.87 483.56
+    M481.75 495.51 L349.87 495.51
+    M481.75 507.47 L349.87 507.47
+    M481.75 519.42 L349.87 519.42
+    M481.75 531.37 L349.87 531.37"
+                    />
+                    <path className="st2" d="M415.81 547.8 L415.81 471.6" />
+
+                    <path
+                      className="st2"
+                      d="
+    M990.71 468.28 L911.62 468.28
+    M990.71 477.23 L911.62 477.23
+    M990.71 486.17 L911.62 486.17
+    M990.71 495.12 L911.62 495.12
+    M990.71 504.06 L911.62 504.06
+    M990.71 513.01 L911.62 513.01
+    M990.71 521.95 L911.62 521.95
+    M990.71 530.9  L911.62 530.9"
+                    />
+                    <path className="st2" d="M951.16 547.8 L951.16 468.28" />
+
+                    <path className="st0" d="M679.13 548.12 L808.95 548.12" />
+                    <path className="st0" d="M375.16 456.76 L595.38 456.76" />
+                    <path className="st0" d="M595.38 350.83 L595.38 548.35" />
+                    <polyline
+                      className="st0"
+                      points="570.23 353.97 481.75 353.97 481.75 456.76 481.75 547.8"
+                    />
+                    <path className="st0" d="M610.24 457.11 L1088.13 457.11" />
+                    <path className="st0" d="M799.28 350.81 L799.28 547.8" />
+                    <polyline
+                      className="st0"
+                      points="911.62 547.8 911.62 353.97 824.55 353.97"
+                    />
+                    <path className="st0" d="M987.52 353.97 L1088.13 353.97" />
+                    <path className="st0" d="M990.71 401.99 L990.71 547.8" />
+                    <path className="st0" d="M1063.07 226.68 L824.55 226.68" />
+                    <path className="st0" d="M935.04 226.68 L935.04 101.65" />
+                    <path className="st0" d="M799.04 101.65 L799.04 230.55" />
+                    <path className="st0" d="M694.36 101.65 L694.36 230.55" />
+                    <path className="st0" d="M595.38 101.65 L595.38 230.55" />
+                    <path className="st0" d="M485.27 101.65 L485.27 226.68" />
+                    <path className="st0" d="M375.16 226.68 L570.23 226.68" />
+                    <path className="st0" d="M349.87 101.65 L349.87 229.97" />
+                    <path className="st0" d="M233.75 101.65 L233.75 147.98" />
+                    <path className="st0" d="M111.87 168.58 L237.94 168.58" />
+                    <path className="st0" d="M111.87 314.18 L234.07 314.18" />
+                    <path className="st0" d="M234.07 191.51 L234.07 432.74" />
+                    <polyline
+                      className="st0"
+                      points="234.07 282.35 302.66 282.35 302.66 345.77 234.07 345.77"
+                    />
+                    <path className="st0" d="M111.87 456.76 L349.87 456.76" />
+                    <path className="st0" d="M349.87 395.09 L349.87 548.12" />
+                    <polyline
+                      className="st0"
+                      points="481.75 548.12 111.87 548.12 111.87 101.65 1088.13 101.65 1088.13 547.8 481.75 547.8"
+                    />
+                  </>
+                )}
 
                 {/* Connections (admin mode shows them prominently) */}
-                                <ConnectionLayer
-                                  nodes={nodesOnCurrentFloor}
-                                  isAdminMode={isAdminMode}
-                                  selectedNodeId={selectedNode?.id}
-                                />
-                
-                                {/* Path overlay */}
-                                {currentPath && <PathOverlay path={currentPath} />}
-                
-                                {/* Nodes */}
-                                <NodeLayer
-                                  nodes={nodesOnCurrentFloor}
-                                  selectedNodeId={selectedNode?.id}
-                                  startNodeId={startNode?.id}
-                                  endNodeId={endNode?.id}
-                                  isAdminMode={isAdminMode}
-                                  isConnecting={isConnecting}
-                                  connectionStartId={connectionStart?.id}
-                                  onNodeClick={onNodeClick}
-                                  onNodeHover={setHoveredNode}
-                                  zoomLevel={zoomLevel}
-                                />
+                <ConnectionLayer
+                  nodes={nodesOnCurrentFloor}
+                  isAdminMode={isAdminMode}
+                  selectedNodeId={selectedNode?.id}
+                />
+
+                {/* Path overlay */}
+                {currentPath && <PathOverlay path={currentPath} />}
+
+                {/* Nodes */}
+                <NodeLayer
+                  nodes={nodesOnCurrentFloor}
+                  selectedNodeId={selectedNode?.id}
+                  startNodeId={startNode?.id}
+                  endNodeId={endNode?.id}
+                  isAdminMode={isAdminMode}
+                  isConnecting={isConnecting}
+                  connectionStartId={connectionStart?.id}
+                  onNodeClick={onNodeClick}
+                  onNodeHover={setHoveredNode}
+                  zoomLevel={zoomLevel}
+                />
               </svg>
             </TransformComponent>
           </>

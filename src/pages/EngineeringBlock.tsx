@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { MapCanvas } from "@/components/Map/MapCanvas";
-import { NavigationPanel } from "@/components/ui/NavigationPanel";
-import { useNavigationStore } from "@/store/useNavigationStore";
+import { useState } from "react";
 import { Menu, X, Map, Info, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,10 +6,12 @@ import { useAdminMode } from "@/hooks/useAdminMode";
 import { EngineeringMap } from "@/components/Map/building/engineering-block/EngineeringMap";
 import { AdminPanel } from "@/components/Admin/AdminPanel";
 import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
+import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { isAdminMode, setCurrentFloor, currentFloor } = useNavigationStore();
+  const { isAdminMode, setCurrentFloor, currentFloor } =
+    useBlockNavigationStore();
   const { toggleAdminMode } = useAdminMode();
 
   return (

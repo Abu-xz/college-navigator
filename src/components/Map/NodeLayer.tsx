@@ -56,7 +56,7 @@ export function NodeLayer({
         const size = isSelected || isStart || isEnd ? baseSize * 1.5 : baseSize;
         
         // Skip waypoints in non-admin mode at low zoom
-        if (!isAdminMode && node.type === 'WAYPOINT' && zoomLevel < 0.6) {
+        if (isAdminMode && node.type === 'WAYPOINT' && zoomLevel < 0.6) {
           return null;
         }
         
