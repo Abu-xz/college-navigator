@@ -79,7 +79,7 @@ export const useBlockNavigationStore = create<BlockNavigationStore>((set, get) =
   isConnecting: false,
   connectionStart: null,
   
-  currentFloor: 0,
+  currentFloor: 1,
   searchQuery: '',
   
   // Navigation actions

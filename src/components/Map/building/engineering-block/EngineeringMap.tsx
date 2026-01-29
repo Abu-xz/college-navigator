@@ -64,18 +64,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
 
       case 1:
         return `
-        .st0 { stroke-width: 11.52px; }
-        .st0, .st1, .st2 {
-          fill: none;
-          stroke: #707071;
-          stroke-miterlimit: 10;
-        }
-        .st1 { stroke-width: 2.47px; }
-        .st2 { stroke-width: 2.48px; }
-      `;
-      case 2:
-        return `
-       .st0 { stroke-width: 1.8px; }
+        .st0 { stroke-width: 1.8px; }
       .st0, .st1, .st2, .st3 {
         fill: none;
         stroke: #707071;
@@ -84,6 +73,18 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
       .st1 { stroke-width: 8.34px; }
       .st2 { stroke-width: 1.84px; }
       .st3 { stroke-width: 1.9px; }
+      `;
+      case 2:
+        return `
+          .st0 { stroke-width: 11.52px; }
+        .st0, .st1, .st2 {
+          fill: none;
+          stroke: #707071;
+          stroke-miterlimit: 10;
+        }
+        .st1 { stroke-width: 2.47px; }
+        .st2 { stroke-width: 2.48px; }
+       
       `;
 
       default:
