@@ -87,14 +87,11 @@ export function useBlockNavigation() {
 
   // Get nodes for current floor
   const nodesOnCurrentFloor = useMemo(() => {
-    console.log("current floor updated and node also updated", currentFloor);
     const currentFloorNodes = nodes.filter((n) => {
       const isCurrentFloorNode = n.floor === currentFloor;
-      console.log(`CurrentFloorNode: ${isCurrentFloorNode} || Floor No: ${n.floor}`)
       return isCurrentFloorNode ?? n
 
     });
-    console.log("Nodes on current floor: ", currentFloorNodes);
     return currentFloorNodes;
   }, [nodes, currentFloor]);
 
