@@ -65,7 +65,19 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
 
       case 1:
         return `
-       .st0 {
+       .st0 { stroke-width: 6.52px; }
+        .st0, .st1, .st2 {
+          fill: none;
+          stroke: #707071;
+          stroke-miterlimit: 10;
+        }
+        .st1 { stroke-width: 2.47px; }
+        .st2 { stroke-width: 2.48px; }
+       
+      `;
+      case 2:
+        return `
+         .st0 {
         stroke-width: 2.48px;
       }
 
@@ -82,18 +94,6 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
       .st2 {
         stroke-width: 2.47px;
       }
-      `;
-      case 2:
-        return `
-          .st0 { stroke-width: 6.52px; }
-        .st0, .st1, .st2 {
-          fill: none;
-          stroke: #707071;
-          stroke-miterlimit: 10;
-        }
-        .st1 { stroke-width: 2.47px; }
-        .st2 { stroke-width: 2.48px; }
-       
       `;
 
       default:
@@ -307,90 +307,6 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                   </>
                 ) : currentFloor === 1 ? (
                   <>
-                    <path className="st2" d="M400.96 229.02 H505.64" />
-                    <path className="st2" d="M400.96 214.75 H505.64" />
-                    <path className="st2" d="M400.96 200.47 H505.64" />
-                    <path className="st2" d="M400.96 186.2 H505.64" />
-                    <path className="st2" d="M400.96 171.93 H505.64" />
-                    <path className="st2" d="M400.96 157.65 H505.64" />
-                    <path className="st2" d="M400.96 143.38 H505.64" />
-                    <path className="st2" d="M400.96 129.11 H505.64" />
-                    <path className="st2" d="M453.3 229.03 V101.65" />
-
-                    <path className="st0" d="M850.13 471.6 H718.25" />
-                    <path className="st0" d="M850.13 483.56 H718.25" />
-                    <path className="st0" d="M850.13 495.51 H718.25" />
-                    <path className="st0" d="M850.13 507.47 H718.25" />
-                    <path className="st0" d="M850.13 519.42 H718.25" />
-                    <path className="st0" d="M850.13 531.37 H718.25" />
-                    <path className="st0" d="M784.19 471.6 V547.8" />
-
-                    <path className="st0" d="M288.38 468.28 H209.29" />
-                    <path className="st0" d="M288.38 477.23 H209.29" />
-                    <path className="st0" d="M288.38 486.17 H209.29" />
-                    <path className="st0" d="M288.38 495.12 H209.29" />
-                    <path className="st0" d="M288.38 504.06 H209.29" />
-                    <path className="st0" d="M288.38 513.01 H209.29" />
-                    <path className="st0" d="M288.38 521.95 H209.29" />
-                    <path className="st0" d="M288.38 530.9 H209.29" />
-                    <path className="st0" d="M248.84 468.28 V547.8" />
-
-                    <path className="st1" d="M391.05 548.12 H520.87" />
-                    <path className="st1" d="M604.62 456.76 H824.84" />
-                    <path className="st1" d="M604.62 548.35 V350.83" />
-
-                    <path
-                      className="st1"
-                      d="M718.25 547.8 V456.76 V353.97 H629.77"
-                    />
-
-                    <path className="st1" d="M111.87 457.11 H589.76" />
-                    <path className="st1" d="M400.72 547.8 V350.81" />
-
-                    <path className="st1" d="M375.45 353.97 H288.38 V547.8" />
-
-                    <path className="st1" d="M111.87 353.97 H212.48" />
-                    <path className="st1" d="M209.29 547.8 V401.99" />
-
-                    <path className="st1" d="M375.45 226.68 H136.93" />
-                    <path className="st1" d="M264.96 101.65 V226.68" />
-
-                    <path className="st1" d="M400.96 230.55 V101.65" />
-                    <path className="st1" d="M505.64 230.55 V101.65" />
-                    <path className="st1" d="M604.62 230.55 V101.65" />
-                    <path className="st1" d="M714.73 226.68 V101.65" />
-
-                    <path className="st1" d="M629.77 226.68 H824.84" />
-                    <path className="st1" d="M850.13 229.97 V101.65" />
-
-                    <path className="st1" d="M966.25 147.98 V101.65" />
-                    <path className="st1" d="M962.06 168.58 H1088.13" />
-
-                    <path className="st1" d="M965.93 314.18 H1088.13" />
-                    <path className="st1" d="M965.93 432.74 V191.51" />
-
-                    <path
-                      className="st1"
-                      d="M965.93 345.77 H897.34 V282.35 H965.93"
-                    />
-
-                    <path className="st1" d="M850.13 456.76 H1088.13" />
-                    <path className="st1" d="M850.13 548.12 V395.09" />
-
-                    <path
-                      className="st1"
-                      d="
-    M718.25 547.8
-    H111.87
-    V101.65
-    H1088.13
-    V548.12
-    H718.25
-  "
-                    />
-                  </>
-                ) : (
-                  <>
                     <path className="st1" d="M400.33 224.79 H503.29" />
                     <path className="st1" d="M400.33 210.96 H503.29" />
                     <path className="st1" d="M400.33 197.13 H503.29" />
@@ -476,6 +392,90 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                     <path className="st0" d="M602.84 458.4 V352.29" />
                     <path className="st0" d="M627.58 355.32 H715.68 V457.84" />
                     <path className="st0" d="M715.68 457.84 V548.3" />
+                  </>
+                ) : (
+                  <>
+                    <path className="st2" d="M400.96 229.02 H505.64" />
+                    <path className="st2" d="M400.96 214.75 H505.64" />
+                    <path className="st2" d="M400.96 200.47 H505.64" />
+                    <path className="st2" d="M400.96 186.2 H505.64" />
+                    <path className="st2" d="M400.96 171.93 H505.64" />
+                    <path className="st2" d="M400.96 157.65 H505.64" />
+                    <path className="st2" d="M400.96 143.38 H505.64" />
+                    <path className="st2" d="M400.96 129.11 H505.64" />
+                    <path className="st2" d="M453.3 229.03 V101.65" />
+
+                    <path className="st0" d="M850.13 471.6 H718.25" />
+                    <path className="st0" d="M850.13 483.56 H718.25" />
+                    <path className="st0" d="M850.13 495.51 H718.25" />
+                    <path className="st0" d="M850.13 507.47 H718.25" />
+                    <path className="st0" d="M850.13 519.42 H718.25" />
+                    <path className="st0" d="M850.13 531.37 H718.25" />
+                    <path className="st0" d="M784.19 471.6 V547.8" />
+
+                    <path className="st0" d="M288.38 468.28 H209.29" />
+                    <path className="st0" d="M288.38 477.23 H209.29" />
+                    <path className="st0" d="M288.38 486.17 H209.29" />
+                    <path className="st0" d="M288.38 495.12 H209.29" />
+                    <path className="st0" d="M288.38 504.06 H209.29" />
+                    <path className="st0" d="M288.38 513.01 H209.29" />
+                    <path className="st0" d="M288.38 521.95 H209.29" />
+                    <path className="st0" d="M288.38 530.9 H209.29" />
+                    <path className="st0" d="M248.84 468.28 V547.8" />
+
+                    <path className="st1" d="M391.05 548.12 H520.87" />
+                    <path className="st1" d="M604.62 456.76 H824.84" />
+                    <path className="st1" d="M604.62 548.35 V350.83" />
+
+                    <path
+                      className="st1"
+                      d="M718.25 547.8 V456.76 V353.97 H629.77"
+                    />
+
+                    <path className="st1" d="M111.87 457.11 H589.76" />
+                    <path className="st1" d="M400.72 547.8 V350.81" />
+
+                    <path className="st1" d="M375.45 353.97 H288.38 V547.8" />
+
+                    <path className="st1" d="M111.87 353.97 H212.48" />
+                    <path className="st1" d="M209.29 547.8 V401.99" />
+
+                    <path className="st1" d="M375.45 226.68 H136.93" />
+                    <path className="st1" d="M264.96 101.65 V226.68" />
+
+                    <path className="st1" d="M400.96 230.55 V101.65" />
+                    <path className="st1" d="M505.64 230.55 V101.65" />
+                    <path className="st1" d="M604.62 230.55 V101.65" />
+                    <path className="st1" d="M714.73 226.68 V101.65" />
+
+                    <path className="st1" d="M629.77 226.68 H824.84" />
+                    <path className="st1" d="M850.13 229.97 V101.65" />
+
+                    <path className="st1" d="M966.25 147.98 V101.65" />
+                    <path className="st1" d="M962.06 168.58 H1088.13" />
+
+                    <path className="st1" d="M965.93 314.18 H1088.13" />
+                    <path className="st1" d="M965.93 432.74 V191.51" />
+
+                    <path
+                      className="st1"
+                      d="M965.93 345.77 H897.34 V282.35 H965.93"
+                    />
+
+                    <path className="st1" d="M850.13 456.76 H1088.13" />
+                    <path className="st1" d="M850.13 548.12 V395.09" />
+
+                    <path
+                      className="st1"
+                      d="
+    M718.25 547.8
+    H111.87
+    V101.65
+    H1088.13
+    V548.12
+    H718.25
+  "
+                    />
                   </>
                 )}
 
