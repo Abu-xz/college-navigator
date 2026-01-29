@@ -14,6 +14,7 @@ interface MapCanvasProps {
   height?: number;
 }
 
+
 const SVG_WIDTH = 1000;
 const SVG_HEIGHT = 600;
 
@@ -46,6 +47,42 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
   useEffect(() => {
     console.log("currentFloor", currentFloor);
   }, [currentFloor]);
+
+  const getFloorStyle = (floor: number) => {
+    switch (floor) {
+      case 0:
+        return `
+        .st0 { stroke-width: 1.61px; }
+        .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7 {
+          fill: none;
+          stroke: #111111;
+          stroke-miterlimit: 4;
+        }
+        .st1 { stroke-width: 1.23px; }
+        .st2 { stroke-width: 0.31px; }
+        .st3 { stroke-width: 8.34px; }
+        .st4 { stroke-width: 8.38px; }
+        .st5 { stroke-width: 1.48px; }
+        .st6 { stroke-width: 1.43px; }
+        .st7 { stroke-width: 1.39px; }
+      `;
+
+      case 1:
+        return `
+        .st0 { stroke-width: 11.52px; }
+        .st0, .st1, .st2 {
+          fill: none;
+          stroke: #707071;
+          stroke-miterlimit: 10;
+        }
+        .st1 { stroke-width: 2.47px; }
+        .st2 { stroke-width: 2.48px; }
+      `;
+
+      default:
+        return ``;
+    }
+  };
 
   // Handle SVG click
   const onSvgClick = useCallback(
@@ -186,23 +223,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                 ref={svgRef}
               >
                 <defs>
-                  <style>
-                    {`
-      .st0 { stroke-width: 1.61px; }
-      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7 {
-        fill: none;
-        stroke: #111111;
-        stroke-miterlimit: 10;
-      }
-      .st1 { stroke-width: 1.23px; }
-      .st2 { stroke-width: 1.31px; }
-      .st3 { stroke-width: 8.34px; }
-      .st4 { stroke-width: 8.38px; }
-      .st5 { stroke-width: 1.48px; }
-      .st6 { stroke-width: 1.43px; }
-      .st7 { stroke-width: 1.39px; }
-      `}
-                  </style>
+                  <style>{getFloorStyle(currentFloor)}</style>
                 </defs>
 
                 {currentFloor === 0 ? (
