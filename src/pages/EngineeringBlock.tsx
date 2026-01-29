@@ -6,13 +6,13 @@ import { useAdminMode } from "@/hooks/useAdminMode";
 import { EngineeringMap } from "@/components/Map/building/engineering-block/EngineeringMap";
 import { AdminPanel } from "@/components/Admin/AdminPanel";
 import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
-import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import AboutModal from "@/components/AboutModal";
+
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { isAdminMode, setCurrentFloor, currentFloor } =
-    useBlockNavigationStore();
+  const { isAdminMode, setCurrentFloor, currentFloor } = useBlockNavigation();
   const { toggleAdminMode } = useAdminMode();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
