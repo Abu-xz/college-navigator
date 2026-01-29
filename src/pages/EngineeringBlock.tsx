@@ -7,12 +7,14 @@ import { EngineeringMap } from "@/components/Map/building/engineering-block/Engi
 import { AdminPanel } from "@/components/Admin/AdminPanel";
 import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
+import AboutModal from "@/components/AboutModal";
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { isAdminMode, setCurrentFloor, currentFloor } =
     useBlockNavigationStore();
   const { toggleAdminMode } = useAdminMode();
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -62,11 +64,16 @@ const EngineeringBlock = () => {
             Admin Mode
           </Button>
 
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsAboutOpen(true)}
+          >
             <Info className="h-5 w-5" />
           </Button>
         </div>
       </header>
+      <AboutModal open={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
 
       {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
@@ -99,46 +106,70 @@ const EngineeringBlock = () => {
           <AdminPanel />
 
           {/* Floor selector */}
-          <div className="absolute top-40 left-2 z-50">
-            <div className="backdrop-blur-md bg-slate-300 border border-white/10 rounded-xl p-2 shadow-lg">
-              <p className="text-[10px] uppercase tracking-widest text-black text-center mb-2">
+          <div className="absolute top-40 left-3 z-50">
+            <div className="backdrop-blur-md bg-white/85 border border-black/10 rounded-xl px-3 py-2 shadow-lg">
+              {/* Header */}
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-700 text-center mb-2">
                 Floor
               </p>
 
-              <div className="flex flex-col gap-2">
-                {[0, 1, 2, 3].map((floor) => (
-                  <button
-                    key={floor}
-                    onClick={() => setCurrentFloor(floor)}
-                    className={cn(
-                      "w-12 h-10 text-sm font-semibold rounded-lg transition-all duration-200",
-                      "flex items-center justify-center",
-                      currentFloor === floor
-                        ? "bg-primary text-white shadow-md scale-105"
-                        : "bg-white/90 text-black hover:bg-white",
-                    )}
-                  >
-                    {floor === 0 ? "GF" : `F${floor}`}
-                  </button>
-                ))}
+              {/* Buttons */}
+              <div className="flex flex-col gap-1.5">
+                {[0, 1, 2, 3].map((floor) => {
+                  const isActive = currentFloor === floor;
+
+                  return (
+                    <button
+                      key={floor}
+                      onClick={() => setCurrentFloor(floor)}
+                      className={cn(
+                        "w-12 h-9 rounded-lg text-xs font-semibold",
+                        "flex items-center justify-center transition-all duration-200",
+                        isActive
+                          ? "bg-primary text-white shadow-md scale-105"
+                          : "bg-gray-100 text-gray-800 hover:bg-gray-200",
+                      )}
+                    >
+                      {floor === 0 ? "GF" : `F${floor}`}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          <div className="absolute right-4 bottom-14 backdrop-blur-md bg-slate-300 border border-white/10 rounded-xl p-2">
-            <div className="flex justify-between items-center gap-2">
-              <div className="w-4 h-4 bg-green-600 rounded-full" />
-              <span>Entrance</span>
-            </div>
+          <div className="absolute right-4 bottom-14 z-40 backdrop-blur-md bg-white/80 border border-black/10 rounded-xl px-3 py-2 shadow-lg">
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-gray-700 text-center mb-2">
+              Legend
+            </h3>
 
-            <div className="flex justify-between items-center gap-2">
-              <div className="w-4 h-4 bg-blue-600 rounded-full" />
-              <span>Room</span>
-            </div>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 bg-green-600 rounded-full" />
+                  <span className="text-xs font-medium text-gray-800">
+                    Entrance
+                  </span>
+                </div>
+              </div>
 
-            <div className="flex justify-between ">
-              <div className="w-4 h-4 bg-yellow-500 rounded-full" />
-              <span>Stairs</span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 bg-blue-600 rounded-full" />
+                  <span className="text-xs font-medium text-gray-800">
+                    Room
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 bg-yellow-500 rounded-full" />
+                  <span className="text-xs font-medium text-gray-800">
+                    Stairs
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 

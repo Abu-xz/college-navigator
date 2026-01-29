@@ -7,11 +7,13 @@ import { Menu, X, Map, Info, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAdminMode } from "@/hooks/useAdminMode";
+import AboutModal from "@/components/AboutModal";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { isAdminMode } = useNavigationStore();
   const { toggleAdminMode } = useAdminMode();
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -61,11 +63,16 @@ const Index = () => {
             Admin Mode
           </Button>
 
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsAboutOpen(true)}
+          >
             <Info className="h-5 w-5" />
           </Button>
         </div>
       </header>
+      <AboutModal open={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
 
       {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
