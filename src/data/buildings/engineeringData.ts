@@ -363,6 +363,16 @@ export const initialNodes: MapNode[] = [
     y: 360,
     connections: [],
   },
+  {
+    id: "Corridor1",
+    type: "WAYPOINT",
+    name: "Corridor Pathway",
+    floor: 1,
+    buildingId: "engineering",
+    x: 615,
+    y: 164,
+    connections: [],
+  },
 ];
 
 // Pre-computed connections
