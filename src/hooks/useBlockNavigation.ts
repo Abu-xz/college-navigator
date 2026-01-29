@@ -17,6 +17,8 @@ export function useBlockNavigation() {
     searchQuery,
     setSearchQuery,
     currentFloor,
+    setCurrentFloor,
+    isAdminMode
   } = useBlockNavigationStore();
 
   // Get searchable locations (rooms and entrances)
@@ -113,6 +115,7 @@ export function useBlockNavigation() {
     isCalculating,
     searchQuery,
     currentFloor,
+    setCurrentFloor,
     nodesOnCurrentFloor,
 
     // Computed
@@ -125,6 +128,9 @@ export function useBlockNavigation() {
     clearPath,
     setSearchQuery,
     swapStartEnd,
+
+    // Admin
+    isAdminMode,
 
     // Helpers
     getNodeById,
