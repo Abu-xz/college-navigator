@@ -65,14 +65,27 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
 
       case 1:
         return `
-       .st0 { stroke-width: 6.52px; }
-        .st0, .st1, .st2 {
-          fill: none;
-          stroke: #707071;
-          stroke-miterlimit: 10;
-        }
-        .st1 { stroke-width: 2.47px; }
-        .st2 { stroke-width: 2.48px; }
+         .st0 {
+        stroke-width: 8.34px;
+      }
+
+      .st0, .st1, .st2, .st3 {
+        fill: none;
+        stroke: #707071;
+        stroke-miterlimit: 10;
+      }
+
+      .st1 {
+        stroke-width: 1.9px;
+      }
+
+      .st2 {
+        stroke-width: 1.84px;
+      }
+
+      .st3 {
+        stroke-width: 1.8px;
+      }
        
       `;
       case 2:
@@ -94,8 +107,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
       .st2 {
         stroke-width: 2.47px;
       }
-      `;
-
+`;
       default:
         return ``;
     }
@@ -307,6 +319,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                   </>
                 ) : currentFloor === 1 ? (
                   <>
+                    {/* ===== Block A ===== */}
                     <path className="st1" d="M400.33 224.79 H503.29" />
                     <path className="st1" d="M400.33 210.96 H503.29" />
                     <path className="st1" d="M400.33 197.13 H503.29" />
@@ -317,6 +330,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                     <path className="st1" d="M400.33 127.98 H503.29" />
                     <path className="st1" d="M451.81 224.79 V101.38" />
 
+                    {/* ===== Block B ===== */}
                     <path className="st3" d="M848.52 476.1 H715.68" />
                     <path className="st3" d="M848.52 486.92 H715.68" />
                     <path className="st3" d="M848.52 497.74 H715.68" />
@@ -325,6 +339,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                     <path className="st3" d="M848.52 530.2 H715.68" />
                     <path className="st3" d="M782.1 476.1 V545.07" />
 
+                    {/* ===== Block C ===== */}
                     <path className="st2" d="M284.01 462.65 H211.94" />
                     <path className="st2" d="M284.01 472.28 H211.94" />
                     <path className="st2" d="M284.01 481.92 H211.94" />
@@ -334,14 +349,14 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                     <path className="st2" d="M284.01 520.46 H211.94" />
                     <path className="st2" d="M284.01 530.1 H211.94" />
                     <path className="st2" d="M247.97 462.64 V548.3" />
-                    <path className="st0" d="M1088.12 458.24 V548.62" />
 
+                    {/* ===== Core Paths ===== */}
+                    <path className="st0" d="M1088.12 458.24 V548.62" />
                     <path className="st0" d="M966.24 180.2 V419.7" />
                     <path className="st0" d="M894.04 333.11 H966.24" />
                     <path className="st0" d="M894.04 270.68 H966.24" />
                     <path className="st0" d="M966.24 302.17 H1088.13" />
                     <path className="st0" d="M1088.13 156.86 H962.85" />
-
                     <path className="st0" d="M966.24 101.38 V136.96" />
                     <path className="st0" d="M847.17 229.01 V101.38" />
                     <path className="st0" d="M712.1 225.69 V101.38" />
@@ -354,21 +369,21 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                     <path className="st0" d="M264.36 101.38 V225.69 H137.06" />
                     <path className="st0" d="M290.09 225.69 H374.59" />
 
+                    {/* ===== Outer Boundary ===== */}
                     <path
                       className="st0"
-                      d="
-    M848.52 548.62
-    H111.87
-    V101.38
-    H1088.13
-    V548.62
-    H848.52
-    V396.93
-    V458.24
-    H1088.12
-  "
+                      d="M848.52 548.62
+       H111.87
+       V101.38
+       H1088.13
+       V548.62
+       H848.52
+       V396.93
+       V458.24
+       H1088.12"
                     />
 
+                    {/* ===== Interior ===== */}
                     <path className="st0" d="M399.65 457.84 H111.87" />
                     <path className="st0" d="M212.07 355.66 H111.87" />
                     <path className="st0" d="M209.1 457.84 V380.75" />
@@ -388,6 +403,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                       className="st0"
                       d="M504.72 548.3 V368.5 H559.88 V416.67"
                     />
+
                     <path className="st0" d="M504.72 457.84 H821.81" />
                     <path className="st0" d="M602.84 458.4 V352.29" />
                     <path className="st0" d="M627.58 355.32 H715.68 V457.84" />
