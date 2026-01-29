@@ -54,11 +54,15 @@ export function NodeLayer({
         const isConnectionStart = connectionStartId === node.id;
         const baseSize = NODE_SIZES[node.type];
         const size = isSelected || isStart || isEnd ? baseSize * 1.5 : baseSize;
+   
+        // Skip waypoints in non-admin mode
+        if(!isAdminMode && node.type === "WAYPOINT") return null
         
         // Skip waypoints in non-admin mode at low zoom
         if (isAdminMode && node.type === 'WAYPOINT' && zoomLevel < 0.6) {
           return null;
         }
+
         
         let fillColor = NODE_COLORS[node.type];
         if (isStart) fillColor = 'hsl(var(--map-marker-start))';
