@@ -52,28 +52,6 @@ const EngineeringBlock = () => {
             </span>
           )}
 
-          {/* Floor selector */}
-          <div className="flex gap-4 items-center justify-center">
-            <p className="text-xs uppercase tracking-wide text-white bg-red-600 px-4 py-2 rounded">
-              Select Floor
-            </p>
-            <div className="flex gap-1">
-              {[0, 1, 2, 3].map((floor) => (
-                <button
-                  key={floor}
-                  onClick={() => setCurrentFloor(floor)}
-                  className={cn(
-                    " px-4 py-2 text-sm font-medium rounded-md transition-colors",
-                    currentFloor === floor
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80",
-                  )}
-                >
-                  {floor === 0 ? "GF" : `F${floor}`}
-                </button>
-              ))}
-            </div>
-          </div>
           <Button
             variant="outline"
             size="sm"
@@ -119,6 +97,50 @@ const EngineeringBlock = () => {
         <main className="flex-1 relative overflow-hidden">
           <EngineeringMap />
           <AdminPanel />
+
+          {/* Floor selector */}
+          <div className="absolute top-40 left-2 z-50">
+            <div className="backdrop-blur-md bg-slate-300 border border-white/10 rounded-xl p-2 shadow-lg">
+              <p className="text-[10px] uppercase tracking-widest text-black text-center mb-2">
+                Floor
+              </p>
+
+              <div className="flex flex-col gap-2">
+                {[0, 1, 2, 3].map((floor) => (
+                  <button
+                    key={floor}
+                    onClick={() => setCurrentFloor(floor)}
+                    className={cn(
+                      "w-12 h-10 text-sm font-semibold rounded-lg transition-all duration-200",
+                      "flex items-center justify-center",
+                      currentFloor === floor
+                        ? "bg-primary text-white shadow-md scale-105"
+                        : "bg-white/90 text-black hover:bg-white",
+                    )}
+                  >
+                    {floor === 0 ? "GF" : `F${floor}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute right-4 bottom-14 backdrop-blur-md bg-slate-300 border border-white/10 rounded-xl p-2">
+            <div className="flex justify-between items-center gap-2">
+              <div className="w-4 h-4 bg-green-600 rounded-full" />
+              <span>Entrance</span>
+            </div>
+
+            <div className="flex justify-between items-center gap-2">
+              <div className="w-4 h-4 bg-blue-600 rounded-full" />
+              <span>Room</span>
+            </div>
+
+            <div className="flex justify-between ">
+              <div className="w-4 h-4 bg-yellow-500 rounded-full" />
+              <span>Stairs</span>
+            </div>
+          </div>
 
           {/* Mobile toggle for sidebar */}
           {!isSidebarOpen && (

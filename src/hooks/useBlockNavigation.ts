@@ -35,7 +35,7 @@ export function useBlockNavigation() {
         locations.push({
           node,
           displayName: room.name,
-          category: `${building?.shortName || ""} - ${room.category || "Room"}`,
+          category: ` ${room.category || "Room"} | Floor  ${room.floor} `,
         });
       }
     });

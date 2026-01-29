@@ -215,7 +215,7 @@ export const initialNodes: MapNode[] = [
     y: 450,
     connections: [],
   },
-    {
+  {
     id: "walkway1",
     type: "WAYPOINT",
     name: "Walkway 1",
@@ -225,7 +225,7 @@ export const initialNodes: MapNode[] = [
     y: 400,
     connections: [],
   },
-    {
+  {
     id: "walkway2",
     type: "WAYPOINT",
     name: "Walkway 2",
@@ -322,7 +322,7 @@ export const initialNodes: MapNode[] = [
     floor: 0,
     buildingId: "engineering",
     x: 780,
-    y: 290,
+    y: 287,
     connections: [],
   },
   {
@@ -774,6 +774,7 @@ export const initialConnections: [string, string][] = [
   ["Corridor5", "Corridor6"],
   ["Corridor6", "Corridor7"],
   ["Corridor7", "Corridor8"],
+  ["Corridor7", "Corridor9"],
   ["Corridor8", "Corridor9"],
   ["Corridor9", "Corridor10"],
 
@@ -799,20 +800,23 @@ export const initialConnections: [string, string][] = [
   ["Corridor2", "middle_stairs"],
   ["Corridor3", "middle_stairs4"],
   ["Corridor10", "left_stairs"],
-  
+
   // Floor 1 Corridor Connections
   ["pathway1_floor1", "pathway2_floor1"],
   ["pathway2_floor1", "pathway3_floor1"],
   ["pathway2_floor1", "corridor1_floor1"],
+  ["pathway3_floor1", "corridor1_floor1"],
   ["corridor1_floor1", "corridor2_floor1"],
   ["corridor2_floor1", "corridor3_floor1"],
   ["corridor3_floor1", "corridor4_floor1"],
   ["corridor4_floor1", "corridor5_floor1"],
   ["corridor5_floor1", "corridor6_floor1"],
+  ["corridor5_floor1", "middle_stairs1_floor1"],
   ["corridor6_floor1", "corridor7_floor1"],
   ["corridor7_floor1", "corridor8_floor1"],
   ["corridor8_floor1", "corridor9_floor1"],
   ["corridor8_floor1", "corridor10_floor1"],
+
 
   // Floor 1 Room Connections
   ["room1_floor1", "corridor3_floor1"],
@@ -838,6 +842,10 @@ export const initialConnections: [string, string][] = [
   ["right_stairs1_floor1", "right_stairs2_floor1"],
   ["right_stairs3_floor1", "right_stairs4_floor1"],
   ["right_stairs2_floor1", "right_stairs3_floor1"],
+
+  // Multi-floor Connection
+  ["middle_stairs2", "middle_stairs2_floor1"],
+  // ["middle_stairs2", "middle_stairs1_floor1"],
 ];
 
 // Rooms list for search
@@ -929,5 +937,103 @@ export const rooms: Room[] = [
     floor: 0,
     nodeId: "toilet_entrance",
     category: "Utility",
+  },
+  {
+    id: "room1_floor1",
+    name: "Ece Department",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room1_floor1",
+  },
+  {
+    id: "room2_floor1",
+    name: "EEE Staff Room",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room2_floor1",
+  },
+  {
+    id: "room3_floor1",
+    name: "Second Year EEE",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room3_floor1",
+  },
+  {
+    id: "room4_floor1",
+    name: "First Year EEE",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room4_floor1",
+  },
+  {
+    id: "room5_floor1",
+    name: "CEO Room",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room5_floor1",
+  },
+  {
+    id: "room6_floor1",
+    name: "Vice Principal Room",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room6_floor1",
+  },
+  {
+    id: "room7_floor1",
+    name: "Principal Room",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room7_floor1",
+  },
+  {
+    id: "room8_floor1",
+    name: "Exam Cell",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room8_floor1",
+  },
+  {
+    id: "room9_floor1",
+    name: "Administrators Room",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room9_floor1",
+  },
+  {
+    id: "room10_floor1",
+    name: "Office Room",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room10_floor1",
+  },
+  {
+    id: "room11_floor1",
+    name: "Board Room",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room11_floor1",
+  },
+  {
+    id: "room12_floor1",
+    name: "S4 EEE",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room12_floor1",
+  },
+  {
+    id: "room13_floor1",
+    name: "Computer Lab",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room13_floor1",
+  },
+  {
+    id: "room14_floor1",
+    name: "Toilet Floor 1",
+    buildingId: "engineering",
+    floor: 1,
+    nodeId: "room14_floor1",
   },
 ];

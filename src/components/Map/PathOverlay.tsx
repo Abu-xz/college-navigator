@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
-import { PathResult } from '@/types/navigation';
+import React, { useMemo } from "react";
+import { PathResult } from "@/types/navigation";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 
 interface PathOverlayProps {
   path: PathResult | null;
@@ -7,13 +8,24 @@ interface PathOverlayProps {
 }
 
 export function PathOverlay({ path, animate = true }: PathOverlayProps) {
+  const { currentFloor } = useBlockNavigation();
+
   // Generate SVG path data from nodes
   const pathData = useMemo(() => {
     if (!path || path.nodes.length < 2) return null;
 
-    const points = path.nodes.map((node) => `${node.x},${node.y}`);
-    return `M ${points.join(' L ')}`;
-  }, [path]);
+    // 1. Take only nodes of this floor
+    const floorNodes = path.nodes.filter((node) => node.floor === currentFloor);
+
+    // // 2. Need at least 2 points to draw a path
+    if (floorNodes.length < 2) return null;
+
+    // 3. Build SVG path
+    const svg = `M ${floorNodes.map((n) => `${n.x},${n.y}`).join(" L ")}`;
+    console.log(svg);
+
+    return svg;
+  }, [path, currentFloor]);
 
   // Calculate path length for animation
   const pathLength = useMemo(() => {
@@ -44,7 +56,7 @@ export function PathOverlay({ path, animate = true }: PathOverlayProps) {
         strokeLinejoin="round"
         opacity={0.3}
         style={{
-          filter: 'blur(4px)',
+          filter: "blur(4px)",
         }}
       />
 
@@ -56,40 +68,53 @@ export function PathOverlay({ path, animate = true }: PathOverlayProps) {
         strokeWidth={5}
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeDasharray={animate ? pathLength : 'none'}
+        strokeDasharray={animate ? pathLength : "none"}
         strokeDashoffset={animate ? pathLength : 0}
         style={{
-          animation: animate ? `draw-path 1.5s ease-out forwards` : 'none',
+          animation: animate ? `draw-path 1.5s ease-out forwards` : "none",
         }}
       />
 
       {/* Direction arrows along the path */}
-      {path && path.nodes.length > 2 && (
+      {path && (
         <g className="direction-arrows">
-          {path.nodes.slice(0, -1).map((node, index) => {
-            if (index % 2 !== 0) return null; // Show arrow every other segment
-            
-            const nextNode = path.nodes[index + 1];
-            const midX = (node.x + nextNode.x) / 2;
-            const midY = (node.y + nextNode.y) / 2;
-            
-            // Calculate rotation angle
-            const angle = Math.atan2(nextNode.y - node.y, nextNode.x - node.x);
-            const rotation = (angle * 180) / Math.PI;
-
-            return (
-              <g
-                key={`arrow-${index}`}
-                transform={`translate(${midX}, ${midY}) rotate(${rotation})`}
-              >
-                <polygon
-                  points="0,-4 8,0 0,4"
-                  fill="hsl(var(--map-path))"
-                  opacity={0.8}
-                />
-              </g>
+          {(() => {
+            // 1. Filter nodes for this floor
+            const floorNodes = path.nodes.filter(
+              (n) => n.floor === currentFloor,
             );
-          })}
+
+            if (floorNodes.length < 2) return null;
+
+            // 2. Build arrows from filtered nodes
+            return floorNodes.slice(0, -1).map((node, index) => {
+              if (index % 2 !== 0) return null;
+
+              const nextNode = floorNodes[index + 1];
+
+              const midX = (node.x + nextNode.x) / 2;
+              const midY = (node.y + nextNode.y) / 2;
+
+              const angle = Math.atan2(
+                nextNode.y - node.y,
+                nextNode.x - node.x,
+              );
+              const rotation = (angle * 180) / Math.PI;
+
+              return (
+                <g
+                  key={`arrow-${currentFloor}-${index}`}
+                  transform={`translate(${midX}, ${midY}) rotate(${rotation})`}
+                >
+                  <polygon
+                    points="0,-4 8,0 0,4"
+                    fill="hsl(var(--map-path))"
+                    opacity={0.8}
+                  />
+                </g>
+              );
+            });
+          })()}
         </g>
       )}
 
