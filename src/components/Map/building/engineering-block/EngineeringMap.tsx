@@ -50,8 +50,8 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
         .st0 { stroke-width: 1.61px; }
         .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7 {
           fill: none;
-          stroke: #111111;
-          stroke-miterlimit: 4;
+          stroke: #707071;
+          stroke-miterlimit: 10;
         }
         .st1 { stroke-width: 1.23px; }
         .st2 { stroke-width: 0.31px; }
