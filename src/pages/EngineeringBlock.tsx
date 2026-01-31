@@ -4,8 +4,6 @@ import {
   X,
   Map,
   Info,
-  Settings,
-  UserRoundCog,
   LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,6 +39,7 @@ const EngineeringBlock = () => {
   };
 
   const handleLogout = () => {
+    setIsAboutOpen(false);
     handleAdminToggle();
     router("/");
   };
@@ -86,29 +85,6 @@ const EngineeringBlock = () => {
             <LogOut className="h-4 w-4 mr-2" />
             Go Back
           </Button>
-
-          {isAdminMode ? (
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleLogout}
-              className="bg-card/90 backdrop-blur-sm shadow-md text-black border-2 hover:text-white"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleAdminLogin}
-              className="bg-card/90 backdrop-blur-sm shadow-md"
-            >
-              <UserRoundCog className="h-4 w-4 mr-2" />
-              Admin Login
-            </Button>
-          )}
-
           <Button
             variant="ghost"
             size="icon"
@@ -118,7 +94,13 @@ const EngineeringBlock = () => {
           </Button>
         </div>
       </header>
-      <AboutModal open={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+      <AboutModal
+        open={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+        isAdminMode={isAdminMode}
+        onAdminLogin={handleAdminLogin}
+        onAdminLogout={handleLogout}
+      />
 
       {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
