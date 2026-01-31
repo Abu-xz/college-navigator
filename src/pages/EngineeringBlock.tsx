@@ -92,7 +92,7 @@ const EngineeringBlock = () => {
               variant="destructive"
               size="sm"
               onClick={handleLogout}
-              className="bg-card/90 backdrop-blur-sm shadow-md text-black border-2 border-red-500 hover:text-white"
+              className="bg-card/90 backdrop-blur-sm shadow-md text-black border-2 hover:text-white"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout
