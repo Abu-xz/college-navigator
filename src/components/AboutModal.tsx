@@ -6,13 +6,23 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { MapPin, Navigation, Users, Compass } from "lucide-react";
+import { LogOut, Shield } from "lucide-react";
 
 interface AboutModalProps {
   open: boolean;
   onClose: () => void;
+  isAdminMode: boolean;
+  onAdminLogin: () => void;
+  onAdminLogout: () => void;
 }
 
-const AboutModal = ({ open, onClose }: AboutModalProps) => {
+const AboutModal = ({
+  open,
+  onClose,
+  isAdminMode,
+  onAdminLogin,
+  onAdminLogout,
+}: AboutModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md bg-card">
@@ -107,6 +117,36 @@ const AboutModal = ({ open, onClose }: AboutModalProps) => {
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+          {/* Admin Section */}
+          <div
+            onClick={isAdminMode ? onAdminLogout : onAdminLogin}
+            role="button"
+            tabIndex={0}
+            className=" flex items-center gap-4 w-full px-4 py-4 rounded-xl border border-border bg-muted/60 shadow-sm cursor-pointer hover:border-primary/50 transition "
+          >
+            {/* ICON */}
+            <div
+              className={` w-10 h-10 rounded-full flex items-center justify-center
+              ${isAdminMode ? "bg-red-100 text-red-600" : "bg-primary/10 text-primary"}`}>
+              {isAdminMode ? (
+                <LogOut className="h-5 w-5" />
+              ) : (
+                <Shield className="h-5 w-5" />
+              )}
+            </div>
+
+            {/* TEXT */}
+            <div className="text-left">
+              <p className="text-sm font-semibold">
+                {isAdminMode ? "Logout Admin" : "Admin Login"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {isAdminMode
+                  ? "Admin mode currently active"
+                  : "Restricted system access"}
+              </p>
             </div>
           </div>
 
