@@ -2,6 +2,9 @@ import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Map, Eye, EyeOff, ShieldCheck } from "lucide-react";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("admin@gmail.com");
@@ -9,8 +12,8 @@ export default function AdminLogin() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useNavigate();
 
+  const router = useNavigate();
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
 
@@ -27,71 +30,86 @@ export default function AdminLogin() {
       return setError("All fields are required");
     }
 
-    const EMAIL = "admin@gmail.com";
-    const PASSWORD = "admin@123";
-
-    if (email === EMAIL && password === PASSWORD) {
-      router("/");
+    if (email === "admin@gmail.com" && password === "admin@123") {
       handleAdminToggle();
+      router("/");
+    } else {
+      setError("Invalid admin credentials");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-300">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-slate-900 p-8 rounded-xl shadow-xl border border-slate-800"
-      >
-        <h2 className="text-2xl font-bold text-white text-center mb-6">
-          Admin Panel Login
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      {/* Card */}
+      <div className="w-full max-w-md bg-card/80 backdrop-blur-md border border-border rounded-xl shadow-xl p-8">
+        
+        {/* Header */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center mb-3">
+            <Map className="h-6 w-6 text-primary-foreground" />
+          </div>
+
+          <h2 className="text-2xl font-bold">Admin Login</h2>
+          <p className="text-sm text-muted-foreground">
+            CampusNav Control Panel
+          </p>
+        </div>
 
         {error && (
-          <div className="mb-4 text-red-400 text-sm text-center">{error}</div>
+          <div className="mb-4 text-sm text-red-500 text-center">
+            {error}
+          </div>
         )}
 
-        {/* Email */}
-        <div className="mb-4">
-          <label className="text-sm text-slate-400">Email</label>
-          <input
-            type="email"
-            className="w-full mt-1 p-3 rounded bg-slate-800 text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="admin@campus.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        {/* Password */}
-        <div className="mb-6">
-          <label className="text-sm text-slate-400">Password</label>
-          <div className="relative mt-1">
-            <input
-              type={showPass ? "text" : "password"}
-              className="w-full p-3 rounded bg-slate-800 text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-12"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email */}
+          <div>
+            <label className="text-sm text-muted-foreground">Email</label>
+            <Input
+              type="email"
+              placeholder="admin@campus.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1"
             />
-            <button
-              type="button"
-              onClick={() => setShowPass(!showPass)}
-              className="absolute right-3 top-3 text-slate-400 text-sm"
-            >
-              {showPass ? "Hide" : "Show"}
-            </button>
           </div>
-        </div>
 
-        {/* Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded text-white font-semibold transition disabled:opacity-50"
-        >
-          {loading ? "Signing in..." : "Login"}
-        </button>
-      </form>
+          {/* Password */}
+          <div>
+            <label className="text-sm text-muted-foreground">Password</label>
+            <div className="relative mt-1">
+              <Input
+                type={showPass ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-3 top-2.5 text-muted-foreground"
+              >
+                {showPass ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Button */}
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center gap-2"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            {loading ? "Signing in..." : "Login as Admin"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
