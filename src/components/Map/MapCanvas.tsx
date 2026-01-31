@@ -127,7 +127,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
-        maxScale={3}
+        maxScale={5}
         onTransformed={(_, state) => {
           setZoomLevel(state.scale);
         }}

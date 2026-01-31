@@ -3,17 +3,38 @@ import { MapCanvas } from "@/components/Map/MapCanvas";
 import { NavigationPanel } from "@/components/ui/NavigationPanel";
 import { AdminPanel } from "@/components/Admin/AdminPanel";
 import { useNavigationStore } from "@/store/useNavigationStore";
-import { Menu, X, Map, Info, Settings } from "lucide-react";
+import { Menu, X, Map, Info, Settings, UserRoundCog, LogOutIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import AboutModal from "@/components/AboutModal";
+import { useNavigate } from "react-router-dom";
+import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { isAdminMode } = useNavigationStore();
   const { toggleAdminMode } = useAdminMode();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+
+  const adminModeToggle = useNavigationStore().toggleAdminMode;
+  const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
+
+  const router = useNavigate();
+
+  const handleAdminToggle = () => {
+    adminModeToggle();
+    blockAdminModeToggle();
+  };
+
+  const handleAdminLogin = () => {
+    router("/admin/login");
+  };
+
+  const handleLogout = () => {
+   handleAdminToggle()
+    router("/");
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -47,21 +68,28 @@ const Index = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {isAdminMode && (
-            <span className="px-2 py-1 text-xs font-medium bg-warning/20 text-warning rounded-full">
-              Admin Mode
-            </span>
-          )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={toggleAdminMode}
-            className="bg-card/90 backdrop-blur-sm shadow-md"
-          >
-            <Settings className="h-4 w-4 mr-2" />
-            Admin Mode
-          </Button>
+          {isAdminMode ? (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleLogout}
+              className="bg-card/90 backdrop-blur-sm shadow-md text-black border-2 border-red-500 hover:text-white"
+            >
+              <LogOutIcon className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleAdminLogin}
+              className="bg-card/90 backdrop-blur-sm shadow-md"
+            >
+              <UserRoundCog className="h-4 w-4 mr-2" />
+              Admin Login
+            </Button>
+          )}
 
           <Button
             variant="ghost"
@@ -87,7 +115,7 @@ const Index = () => {
           )}
         >
           <div className="flex-1 overflow-y-auto scrollbar-thin p-4">
-            <NavigationPanel />
+            {isAdminMode ? <AdminPanel /> : <NavigationPanel />}
           </div>
 
           {/* Quick tips */}
@@ -110,7 +138,6 @@ const Index = () => {
         {/* Map area */}
         <main className="flex-1 relative overflow-hidden">
           <MapCanvas />
-          <AdminPanel />
 
           {/* Mobile toggle for sidebar */}
           {!isSidebarOpen && (
