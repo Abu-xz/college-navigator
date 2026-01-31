@@ -3,7 +3,15 @@ import { MapCanvas } from "@/components/Map/MapCanvas";
 import { NavigationPanel } from "@/components/ui/NavigationPanel";
 import { AdminPanel } from "@/components/Admin/AdminPanel";
 import { useNavigationStore } from "@/store/useNavigationStore";
-import { Menu, X, Map, Info, Settings, UserRoundCog, LogOutIcon } from "lucide-react";
+import {
+  Menu,
+  X,
+  Map,
+  Info,
+  Settings,
+  UserRoundCog,
+  LogOutIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAdminMode } from "@/hooks/useAdminMode";
@@ -32,7 +40,8 @@ const Index = () => {
   };
 
   const handleLogout = () => {
-   handleAdminToggle()
+    setIsAboutOpen(false);
+    handleAdminToggle();
     router("/");
   };
 
@@ -68,29 +77,6 @@ const Index = () => {
         </div>
 
         <div className="flex items-center gap-2">
-
-          {isAdminMode ? (
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleLogout}
-              className="bg-card/90 backdrop-blur-sm shadow-md text-black border-2 hover:text-white"
-            >
-              <LogOutIcon className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleAdminLogin}
-              className="bg-card/90 backdrop-blur-sm shadow-md"
-            >
-              <UserRoundCog className="h-4 w-4 mr-2" />
-              Admin Login
-            </Button>
-          )}
-
           <Button
             variant="ghost"
             size="icon"
@@ -100,7 +86,13 @@ const Index = () => {
           </Button>
         </div>
       </header>
-      <AboutModal open={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+      <AboutModal
+        open={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+        isAdminMode={isAdminMode}
+        onAdminLogin={handleAdminLogin}
+        onAdminLogout={handleLogout}
+      />
 
       {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
