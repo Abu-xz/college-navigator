@@ -35,25 +35,25 @@ export function ConnectionLayer({
     return lines;
   }, [nodes]);
 
-  //   // Show faint connection lines for normal Users
-  // if (!isAdminMode) {
-  //   return (
-  //     <g className="connections-layer" opacity={0.15}>
-  //       {connections.map(({ from, to, key }) => (
-  //         <line
-  //           key={key}
-  //           x1={from.x}
-  //           y1={from.y}
-  //           x2={to.x}
-  //           y2={to.y}
-  //           stroke="hsl(var(--foreground))"
-  //           strokeWidth={1}
-  //           strokeLinecap="round"
-  //         />
-  //       ))}
-  //     </g>
-  //   );
-  // }
+    // Show faint connection lines for normal Users
+  if (!isAdminMode) {
+    return (
+      <g className="connections-layer" opacity={0.15}>
+        {connections.map(({ from, to, key }) => (
+          <line
+            key={key}
+            x1={from.x}
+            y1={from.y}
+            x2={to.x}
+            y2={to.y}
+            stroke="hsl(var(--foreground))"
+            strokeWidth={1}
+            strokeLinecap="round"
+          />
+        ))}
+      </g>
+    );
+  }
 
   if (!isAdminMode) return null;
 

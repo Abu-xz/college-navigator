@@ -8,16 +8,17 @@ import { PathOverlay } from "../../PathOverlay";
 import { ConnectionLayer } from "../../ConnectionLayer";
 import { NodeLayer } from "../../NodeLayer";
 import { useBlockNavigation } from "@/hooks/useBlockNavigation";
+import { useBlockAdminMode } from "@/hooks/useBlockAdminMode";
 
 interface MapCanvasProps {
   width?: number;
   height?: number;
 }
 
-const SVG_WIDTH = 1000;
-const SVG_HEIGHT = 600;
+const SVG_WIDTH = 1200;
+const SVG_HEIGHT = 650;
 
-export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
+export function EngineeringMap({ width, height }: MapCanvasProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [hoveredNode, setHoveredNode] = useState<MapNode | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -41,7 +42,8 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
     selectNode,
     handleMapClick,
     createNodeAtPosition,
-  } = useAdminMode();
+    newNodeType,
+  } = useBlockAdminMode();
 
   const getFloorStyle = (floor: number) => {
     switch (floor) {
@@ -137,7 +139,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
   // Handle double click to create node in admin mode
   const onSvgDoubleClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
-      console.log("triggered double click");
+      console.log("triggered double click - engineering: ", isAdminMode);
 
       if (!isAdminMode || !svgRef.current) return;
 
@@ -147,10 +149,10 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
 
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
-
-      createNodeAtPosition(x, y);
+      console.log("creating node at position: ", x, y);
+      createNodeAtPosition(x, y, newNodeType, null, "engineering");
     },
-    [isAdminMode, createNodeAtPosition],
+    [isAdminMode, createNodeAtPosition, newNodeType],
   );
 
   // Handle node click
@@ -246,7 +248,7 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
               <svg
                 id="Layer_1"
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1200 650"
+                viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
                 onClick={onSvgClick}
                 onDoubleClick={onSvgDoubleClick}
                 ref={svgRef}
@@ -518,6 +520,20 @@ export function EngineeringMap({ width = 1000, height = 600 }: MapCanvasProps) {
                   onNodeHover={setHoveredNode}
                   zoomLevel={zoomLevel}
                 />
+
+                {/* Connecting line preview */}
+                {isConnecting && connectionStart && hoveredNode && (
+                  <line
+                    x1={connectionStart.x}
+                    y1={connectionStart.y}
+                    x2={hoveredNode.x}
+                    y2={hoveredNode.y}
+                    stroke="hsl(var(--accent))"
+                    strokeWidth={20}
+                    strokeDasharray="8,4"
+                    pointerEvents="none"
+                  />
+                )}
               </svg>
             </TransformComponent>
           </>

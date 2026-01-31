@@ -4,7 +4,7 @@ import { MapNode, NodeType } from "@/types/navigation";
 import { normalizeCoordinates } from "@/engine/graphUtils";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 
-export function useAdminMode() {
+export function useBlockAdminMode() {
   const {
     isAdminMode,
     selectedNode,
@@ -22,9 +22,11 @@ export function useAdminMode() {
     cancelConnection,
     removeConnection,
     updateNodePosition,
+    newNodeType,
+    setNewNodeType,
     exportData,
     importData,
-  } = useNavigationStore();
+  } = useBlockNavigationStore();
 
   // Handle map click in admin mode
   const handleMapClick = useCallback(
@@ -56,8 +58,16 @@ export function useAdminMode() {
       name?: string,
       buildingId?: string,
     ) => {
+      console.log("creating node");
       const defaultName = `${type} at (${Math.round(x)}, ${Math.round(y)})`;
-      addNewNode(Math.round(x), Math.round(y), type, name || defaultName, buildingId || "");
+      console.log(buildingId);
+      addNewNode(
+        Math.round(x),
+        Math.round(y),
+        type,
+        name || defaultName,
+        buildingId || "",
+      );
     },
     [addNewNode],
   );
@@ -121,6 +131,10 @@ export function useAdminMode() {
     createNodeAtPosition,
     exportData,
     importData,
+
+    // New Node
+    newNodeType,
+    setNewNodeType,
 
     // Helpers
     getConnectionLines,

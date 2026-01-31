@@ -1,20 +1,49 @@
 import { useState } from "react";
-import { Menu, X, Map, Info, Settings } from "lucide-react";
+import {
+  Menu,
+  X,
+  Map,
+  Info,
+  Settings,
+  UserRoundCog,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useAdminMode } from "@/hooks/useAdminMode";
 import { EngineeringMap } from "@/components/Map/building/engineering-block/EngineeringMap";
-import { AdminPanel } from "@/components/Admin/AdminPanel";
 import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
 import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import AboutModal from "@/components/AboutModal";
-
+import { useNavigate } from "react-router-dom";
+import { useBlockAdminMode } from "@/hooks/useBlockAdminMode";
+import { BlockAdminPanel } from "@/components/Admin/BlockAdminPanel";
+import { useNavigationStore } from "@/store/useNavigationStore";
+import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { isAdminMode, setCurrentFloor, currentFloor } = useBlockNavigation();
-  const { toggleAdminMode } = useAdminMode();
+  const { toggleAdminMode } = useBlockAdminMode();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+
+  const adminModeToggle = useNavigationStore().toggleAdminMode;
+  const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
+
+  const router = useNavigate();
+
+  const handleAdminToggle = () => {
+    adminModeToggle();
+    blockAdminModeToggle();
+  };
+
+  const handleAdminLogin = () => {
+    router("/admin/login");
+  };
+
+  const handleLogout = () => {
+    handleAdminToggle();
+    router("/");
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -48,21 +77,37 @@ const EngineeringBlock = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {isAdminMode && (
-            <span className="px-2 py-1 text-xs font-medium bg-warning/20 text-warning rounded-full">
-              Admin Mode
-            </span>
-          )}
-
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            onClick={toggleAdminMode}
+            onClick={() => router("/")}
             className="bg-card/90 backdrop-blur-sm shadow-md"
           >
-            <Settings className="h-4 w-4 mr-2" />
-            Admin Mode
+            <LogOut className="h-4 w-4 mr-2" />
+            Go Back
           </Button>
+
+          {isAdminMode ? (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleLogout}
+              className="bg-card/90 backdrop-blur-sm shadow-md text-black border-2 border-red-500 hover:text-white"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleAdminLogin}
+              className="bg-card/90 backdrop-blur-sm shadow-md"
+            >
+              <UserRoundCog className="h-4 w-4 mr-2" />
+              Admin Login
+            </Button>
+          )}
 
           <Button
             variant="ghost"
@@ -88,7 +133,7 @@ const EngineeringBlock = () => {
           )}
         >
           <div className="flex-1 overflow-y-auto scrollbar-thin p-4">
-            <BlockNavigationPanel />
+            {isAdminMode ? <BlockAdminPanel /> : <BlockNavigationPanel />}
           </div>
         </aside>
 
@@ -103,7 +148,6 @@ const EngineeringBlock = () => {
         {/* Map area */}
         <main className="flex-1 relative overflow-hidden">
           <EngineeringMap />
-          <AdminPanel />
 
           {/* Floor selector */}
           <div className="absolute top-40 left-3 z-50">
