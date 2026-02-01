@@ -85,28 +85,6 @@ const Index = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {isAdminMode ? (
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleLogout}
-              className="bg-card/90 backdrop-blur-sm shadow-md text-black border-2 border-red-500 hover:text-white"
-            >
-              <LogOutIcon className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleAdminLogin}
-              className="bg-card/90 backdrop-blur-sm shadow-md"
-            >
-              <UserRoundCog className="h-4 w-4 mr-2" />
-              Admin Login
-            </Button>
-          )}
-
           <Button
             variant="ghost"
             size="icon"
