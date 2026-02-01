@@ -80,21 +80,21 @@ interface BlockNavigationStore {
 }
 
 // Initialize nodes with connections
-function initializeNodesWithConnections(): MapNode[] {
-  let nodes = [...initialNodes];
+// function initializeNodesWithConnections(): MapNode[] {
+//   let nodes = [...initialNodes];
 
-  initialConnections.forEach(([id1, id2]) => {
-    nodes = connectNodes(nodes, id1, id2);
-  });
+//   initialConnections.forEach(([id1, id2]) => {
+//     nodes = connectNodes(nodes, id1, id2);
+//   });
 
-  return nodes;
-}
+//   return nodes;
+// }
 
 export const useBlockNavigationStore = create<BlockNavigationStore>(
   (set, get) => ({
     // Initial state
-    nodes: initializeNodesWithConnections(),
-    buildings,
+    nodes: [],
+    buildings: [],
     rooms,
 
     startNode: null,
@@ -113,9 +113,8 @@ export const useBlockNavigationStore = create<BlockNavigationStore>(
 
     // New Node type
     setNewNodeType: (type) => {
-      set({newNodeType: type})
+      set({ newNodeType: type });
     },
-
 
     // Navigation actions
     setStartNode: (node) => {
@@ -204,13 +203,13 @@ export const useBlockNavigationStore = create<BlockNavigationStore>(
       set({ isConnecting: true, connectionStart: node });
     },
 
-    completeConnection: (targetNode) => {
+    completeConnection: async (targetNode) => {
       const { connectionStart, nodes } = get();
 
       if (!connectionStart) return;
 
       set({
-        nodes: connectNodes(nodes, connectionStart.id, targetNode.id),
+        nodes: await connectNodes(nodes, connectionStart.id, targetNode.id),
         isConnecting: false,
         connectionStart: null,
       });

@@ -15,14 +15,15 @@ export function BuildingLayer({
   hoveredBuilding,
   onBuildingHover,
 }: BuildingLayerProps) {
-  
   const router = useNavigate();
 
-  const availableBlocks = ["engineering"];
-  
+  // fetch available building from db
+  const availableBlocksIds = ["697df8cc50e0af064dfd3954"];
+
   const handleBuildingClick = (building: Building) => {
+    console.log(building);
     onBuildingClick?.(building);
-    if (availableBlocks.includes(building.id)) router(`/${building.id}`);
+    if (availableBlocksIds.includes(building.id)) router(`/engineering`);
   };
 
   return (

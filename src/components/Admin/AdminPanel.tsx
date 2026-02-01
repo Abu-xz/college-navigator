@@ -16,9 +16,10 @@ import {
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { Button } from "@/components/ui/button";
-import { NodeType } from "@/types/navigation";
+import { MapNode, NodeType } from "@/types/navigation";
 import { cn } from "@/lib/utils";
 import { useBlockAdminMode } from "@/hooks/useBlockAdminMode";
+import EditNodeModal from "../EditNodeModal";
 
 const NODE_TYPES: { type: NodeType; label: string; color: string }[] = [
   { type: "ROOM", label: "Room", color: "bg-primary" },
@@ -29,22 +30,19 @@ const NODE_TYPES: { type: NodeType; label: string; color: string }[] = [
 ];
 
 export function AdminPanel() {
-  const [newNodeType, setNewNodeType] = useState<NodeType>("WAYPOINT");
-  const [showExport, setShowExport] = useState(false);
-
   const {
     isAdminMode,
     selectedNode,
     isConnecting,
     connectionStart,
-    toggleAdminMode,
-    selectNode,
     deleteNode,
     startConnection,
     cancelConnection,
+    newNodeType,
+    setNewNodeType,
     exportData,
+    setEditingMode,
   } = useAdminMode();
-
 
   if (!isAdminMode) return null;
 
@@ -122,6 +120,17 @@ export function AdminPanel() {
                   Connect
                 </Button>
               )}
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => {
+                  setEditingMode(selectedNode);
+                }}
+                className="flex-1"
+              >
+                <Edit color="white" size={13} />
+                Edit
+              </Button>
               <Button
                 variant="destructive"
                 size="sm"

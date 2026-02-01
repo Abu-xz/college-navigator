@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 /* CampusNav Design System - Navigation-focused palette */
 
@@ -76,9 +75,15 @@
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(215 25% 12% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(215 25% 12% / 0.1), 0 2px 4px -2px hsl(215 25% 12% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(215 25% 12% / 0.1), 0 4px 6px -4px hsl(215 25% 12% / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(215 25% 12% / 0.1), 0 8px 10px -6px hsl(215 25% 12% / 0.1);
+    --shadow-md:
+      0 4px 6px -1px hsl(215 25% 12% / 0.1),
+      0 2px 4px -2px hsl(215 25% 12% / 0.1);
+    --shadow-lg:
+      0 10px 15px -3px hsl(215 25% 12% / 0.1),
+      0 4px 6px -4px hsl(215 25% 12% / 0.1);
+    --shadow-xl:
+      0 20px 25px -5px hsl(215 25% 12% / 0.1),
+      0 8px 10px -6px hsl(215 25% 12% / 0.1);
   }
 
   .dark {
@@ -145,7 +150,9 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 }
 
@@ -174,7 +181,8 @@
   }
 
   @keyframes pulse-ring {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
       transform: scale(1);
     }
@@ -299,5 +307,21 @@
       opacity: 1;
       transform: scale(1);
     }
+  }
+
+  .label {
+    @apply text-xs text-gray-500 mb-1 block;
+  }
+
+  .input {
+    @apply border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+
+  .btn-primary {
+    @apply bg-green-600 text-white px-4 py-2 rounded;
+  }
+
+  .btn-secondary {
+    @apply border px-4 py-2 rounded;
   }
 }
