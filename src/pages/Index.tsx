@@ -1,26 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MapCanvas } from "@/components/Map/MapCanvas";
 import { NavigationPanel } from "@/components/ui/NavigationPanel";
 import { AdminPanel } from "@/components/Admin/AdminPanel";
 import { useNavigationStore } from "@/store/useNavigationStore";
-import { Menu, X, Map, Info, Settings, UserRoundCog, LogOutIcon } from "lucide-react";
+import {
+  Menu,
+  X,
+  Map,
+  Info,
+  Settings,
+  UserRoundCog,
+  LogOutIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import AboutModal from "@/components/AboutModal";
 import { useNavigate } from "react-router-dom";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
+import { buildingsService } from "@/services/buildings.service";
+import EditNodeModal from "@/components/EditNodeModal";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { isAdminMode } = useNavigationStore();
-  const { toggleAdminMode } = useAdminMode();
+  const { isAdminMode, fetchBuildings, fetchNodes, nodes } =
+    useNavigationStore();
+  const { editingMode, setEditingMode } = useAdminMode();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
-
   const router = useNavigate();
+
+  useEffect(() => {
+    console.log("fetching buildings and nodes");
+    fetchBuildings();
+    fetchNodes();
+  }, [fetchBuildings, fetchNodes]);
 
   const handleAdminToggle = () => {
     adminModeToggle();
@@ -32,7 +48,7 @@ const Index = () => {
   };
 
   const handleLogout = () => {
-   handleAdminToggle()
+    handleAdminToggle();
     router("/");
   };
 
@@ -68,7 +84,6 @@ const Index = () => {
         </div>
 
         <div className="flex items-center gap-2">
-
           {isAdminMode ? (
             <Button
               variant="destructive"
@@ -149,6 +164,13 @@ const Index = () => {
             >
               <Menu className="h-5 w-5" />
             </Button>
+          )}
+
+          {editingMode && (
+            <EditNodeModal
+              node={editingMode}
+              onClose={() => setEditingMode(null)}
+            />
           )}
         </main>
       </div>

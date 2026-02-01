@@ -17,24 +17,24 @@ export function useNavigation() {
     searchQuery,
     setSearchQuery,
     currentFloor,
+    fetchNodes,
   } = useNavigationStore();
 
   // Get searchable locations (rooms and entrances)
   const searchableLocations = useMemo(() => {
     const locations: { node: MapNode; displayName: string; category: string }[] = [];
-    
-    // Add rooms
-    rooms.forEach((room) => {
-      const node = nodes.find((n) => n.id === room.nodeId);
-      if (node) {
-        const building = buildings.find((b) => b.id === room.buildingId);
-        locations.push({
-          node,
-          displayName: room.name,
-          category: `${building?.shortName || ''} - ${room.category || 'Room'}`,
-        });
-      }
-    });
+    // // Add rooms
+    // rooms.forEach((room) => {
+    //   const node = nodes.find((n) => n.id === room.nodeId);
+    //   if (node) {
+    //     const building = buildings.find((b) => b.id === room.buildingId);
+    //     locations.push({
+    //       node,
+    //       displayName: room.name,
+    //       category: `${building?.shortName || ''} - ${room.category || 'Room'}`,
+    //     });
+    //   }
+    // });
     
     // Add entrances
     nodes
@@ -117,6 +117,7 @@ export function useNavigation() {
     clearPath,
     setSearchQuery,
     swapStartEnd,
+    fetchNodes,
     
     // Helpers
     getNodeById,

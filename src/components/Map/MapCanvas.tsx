@@ -43,6 +43,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
     selectNode,
     handleMapClick,
     createNodeAtPosition,
+    newNodeType
   } = useAdminMode();
 
   // Handle SVG click
@@ -78,9 +79,9 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
 
-      createNodeAtPosition(x, y);
+      createNodeAtPosition(x, y, newNodeType);
     },
-    [isAdminMode, createNodeAtPosition],
+    [isAdminMode, createNodeAtPosition, newNodeType],
   );
 
   // Handle node click

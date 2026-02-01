@@ -2,7 +2,8 @@ import { useCallback } from "react";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { MapNode, NodeType } from "@/types/navigation";
 import { normalizeCoordinates } from "@/engine/graphUtils";
-import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
+import { mapNodesService } from "@/services/nodes.service";
+import { toast } from "sonner";
 
 export function useAdminMode() {
   const {
@@ -22,6 +23,10 @@ export function useAdminMode() {
     cancelConnection,
     removeConnection,
     updateNodePosition,
+    newNodeType,
+    setNewNodeType,
+    editingMode,
+    setEditingMode,
     exportData,
     importData,
   } = useNavigationStore();
@@ -49,7 +54,7 @@ export function useAdminMode() {
 
   // Create a new node at position
   const createNodeAtPosition = useCallback(
-    (
+    async (
       x: number,
       y: number,
       type: NodeType = "WAYPOINT",
@@ -57,9 +62,36 @@ export function useAdminMode() {
       buildingId?: string,
     ) => {
       const defaultName = `${type} at (${Math.round(x)}, ${Math.round(y)})`;
-      addNewNode(Math.round(x), Math.round(y), type, name || defaultName, buildingId || "");
+
+      const newNode = {
+        x: Math.round(x),
+        y: Math.round(y),
+        type: type,
+        floor: currentFloor,
+        name: name || defaultName,
+        buildingId: buildingId || "",
+        connections: [],
+      };
+      try {
+        console.log("adding new node and send to backend");
+        const res = await mapNodesService.createNode(newNode);
+        const data = res.data;
+        if (res.success) {
+          addNewNode(
+            data.id,
+            Math.round(x),
+            Math.round(y),
+            type,
+            name || defaultName,
+            buildingId || "",
+          );
+        }
+      } catch (error) {
+        toast.error("Unable to create new node, Please try again");
+        console.log("Error: [admin mode hook]", error);
+      }
     },
-    [addNewNode],
+    [addNewNode, currentFloor],
   );
 
   // Get node connections as line segments
@@ -121,6 +153,14 @@ export function useAdminMode() {
     createNodeAtPosition,
     exportData,
     importData,
+
+    // New Node
+    newNodeType,
+    setNewNodeType,
+
+    // Edit Node
+    editingMode,
+    setEditingMode,
 
     // Helpers
     getConnectionLines,
