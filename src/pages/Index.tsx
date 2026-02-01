@@ -48,6 +48,7 @@ const Index = () => {
   };
 
   const handleLogout = () => {
+    setIsAboutOpen(false);
     handleAdminToggle();
     router("/");
   };
@@ -115,7 +116,13 @@ const Index = () => {
           </Button>
         </div>
       </header>
-      <AboutModal open={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+      <AboutModal
+        open={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+        isAdminMode={isAdminMode}
+        onAdminLogin={handleAdminLogin}
+        onAdminLogout={handleLogout}
+      />
 
       {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
