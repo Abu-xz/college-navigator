@@ -35,6 +35,8 @@ const EngineeringBlock = () => {
   console.log(toNode);
 
   useEffect(() => {
+    console.log("================running====================");
+    if (!fromNode || !toNode) return;
     const startNode = nodes.find((n) => n.id === fromNode);
     const endNode = nodes.find((n) => n.id === toNode);
 
