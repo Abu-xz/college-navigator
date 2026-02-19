@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { MapNode } from "@/types/navigation";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 
 interface ConnectionLayerProps {
   nodes: MapNode[];
@@ -15,28 +16,38 @@ export function ConnectionLayer({
   onConnectionClick,
 }: ConnectionLayerProps) {
   // Get all unique connections
+  const { currentFloor } = useBlockNavigation();
+
+  const floorNodes = useMemo(() => {
+    return nodes.filter((node) => node.floor === currentFloor);
+  }, [nodes, currentFloor]);
+
   const connections = useMemo(() => {
     const lines: { from: MapNode; to: MapNode; key: string }[] = [];
     const seen = new Set<string>();
 
-    nodes.forEach((node) => {
+    floorNodes.forEach((node) => {
       node.connections.forEach((conn) => {
+        const toNode = floorNodes.find((n) => n.id === conn.nodeId);
+
+        if (!toNode) return; // 🚨 skip cross-floor connection
+
         const key = [node.id, conn.nodeId].sort().join("-");
+
         if (!seen.has(key)) {
-          const toNode = nodes.find((n) => n.id === conn.nodeId);
-          if (toNode) {
-            lines.push({ from: node, to: toNode, key });
-            seen.add(key);
-          }
+          lines.push({ from: node, to: toNode, key });
+          seen.add(key);
         }
       });
     });
 
     return lines;
-  }, [nodes]);
+  }, [floorNodes]);
 
-    // Show faint connection lines for normal Users
+  if (!floorNodes.length) return null;
+
   if (!isAdminMode) {
+    // In normal mode, show faint connection lines
     return (
       <g className="connections-layer" opacity={0.15}>
         {connections.map(({ from, to, key }) => (
@@ -54,8 +65,6 @@ export function ConnectionLayer({
       </g>
     );
   }
-
-  if (!isAdminMode) return null;
 
   return (
     <g className="connections-layer">

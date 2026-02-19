@@ -1,5 +1,6 @@
-import React from 'react';
-import { Building } from '@/types/navigation';
+import React from "react";
+import { Building } from "@/types/navigation";
+import { Router, useNavigate } from "react-router-dom";
 
 interface BuildingLayerProps {
   buildings: Building[];
@@ -14,11 +15,22 @@ export function BuildingLayer({
   hoveredBuilding,
   onBuildingHover,
 }: BuildingLayerProps) {
+  const router = useNavigate();
+
+  // fetch available building from db
+  const availableBlocksIds = ["697df8cc50e0af064dfd3954"];
+
+  const handleBuildingClick = (building: Building) => {
+    console.log(building);
+    onBuildingClick?.(building);
+    if (availableBlocksIds.includes(building.id)) router(`/engineering`);
+  };
+
   return (
     <g className="buildings-layer">
       {buildings.map((building) => {
         const isHovered = hoveredBuilding === building.id;
-        
+
         return (
           <g key={building.id}>
             {/* Building shadow */}
@@ -30,7 +42,7 @@ export function BuildingLayer({
               rx={8}
               fill="hsl(var(--foreground) / 0.1)"
             />
-            
+
             {/* Building body */}
             <rect
               x={building.bounds.x}
@@ -38,16 +50,20 @@ export function BuildingLayer({
               width={building.bounds.width}
               height={building.bounds.height}
               rx={8}
-              fill={isHovered ? 'hsl(var(--map-building-hover))' : 'hsl(var(--map-building))'}
+              fill={
+                isHovered
+                  ? "hsl(var(--map-building-hover))"
+                  : "hsl(var(--map-building))"
+              }
               stroke={building.color}
               strokeWidth={2}
               className="building-interactive"
-              onClick={() => onBuildingClick?.(building)}
+              onClick={() => handleBuildingClick(building)}
               onMouseEnter={() => onBuildingHover?.(building.id)}
               onMouseLeave={() => onBuildingHover?.(null)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             />
-            
+
             {/* Building label */}
             <text
               x={building.bounds.x + building.bounds.width / 2}
@@ -55,13 +71,13 @@ export function BuildingLayer({
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(var(--foreground))"
-              fontSize={14}
+              fontSize={8}
               fontWeight={600}
               className="pointer-events-none select-none"
             >
               {building.shortName}
             </text>
-            
+
             {/* Full name on hover */}
             {isHovered && (
               <text

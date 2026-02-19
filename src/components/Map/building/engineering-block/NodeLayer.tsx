@@ -45,6 +45,8 @@ export function NodeLayer({
 }: NodeLayerProps) {
   // Only show detailed nodes in admin mode or at high zoom
   const showLabels = isAdminMode || zoomLevel > 0.8;
+  const { currentFloor } = useBlockNavigation();
+
   return (
     <g className="nodes-layer">
       {nodes.map((node) => {
@@ -55,15 +57,19 @@ export function NodeLayer({
         const baseSize = NODE_SIZES[node.type];
         const size = isSelected || isStart || isEnd ? baseSize * 1.5 : baseSize;
 
-        // Skip waypoints in non-admin mode
-        // if(!isAdminMode && node.type === "WAYPOINT") return null
-
         // Skip waypoints in non-admin mode at low zoom
-        if (isAdminMode && node.type === "WAYPOINT" && zoomLevel < 0.6) {
+        if (!isAdminMode && node.type === "WAYPOINT" && zoomLevel < 0.6) {
           return null;
         }
 
-      
+        // Prevent another floor node display
+        // if (node.floor !== currentFloor) return null;
+
+        // for admin connection purpose
+        if (!isAdminMode && node.floor !== currentFloor) {
+          return null;
+        }
+
         let fillColor = NODE_COLORS[node.type];
         if (isStart) fillColor = "hsl(var(--map-marker-start))";
         if (isEnd) fillColor = "hsl(var(--map-marker-end))";

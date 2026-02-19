@@ -2,10 +2,11 @@ import { useCallback } from "react";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { MapNode, NodeType } from "@/types/navigation";
 import { normalizeCoordinates } from "@/engine/graphUtils";
+import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 import { mapNodesService } from "@/services/nodes.service";
 import { toast } from "sonner";
 
-export function useAdminMode() {
+export function useBlockAdminMode() {
   const {
     isAdminMode,
     selectedNode,
@@ -14,6 +15,7 @@ export function useAdminMode() {
     nodes,
     buildings,
     currentFloor,
+    setCurrentFloor,
     toggleAdminMode,
     selectNode,
     addNewNode,
@@ -29,7 +31,7 @@ export function useAdminMode() {
     setEditingMode,
     exportData,
     importData,
-  } = useNavigationStore();
+  } = useBlockNavigationStore();
 
   // Handle map click in admin mode
   const handleMapClick = useCallback(
@@ -88,7 +90,7 @@ export function useAdminMode() {
         }
       } catch (error) {
         toast.error("Unable to create new node, Please try again");
-        console.log("Error: [admin mode hook]", error);
+        console.log("Error: [block admin mode hook]", error);
       }
     },
     [addNewNode, currentFloor],

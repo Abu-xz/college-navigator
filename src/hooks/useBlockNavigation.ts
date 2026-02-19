@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react';
-import { useNavigationStore } from '@/store/useNavigationStore';
-import { MapNode, Room } from '@/types/navigation';
+import { useCallback, useMemo } from "react";
+import { MapNode, Room } from "@/types/navigation";
+import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 
-export function useNavigation() {
+export function useBlockNavigation() {
   const {
     nodes,
     buildings,
@@ -17,75 +17,94 @@ export function useNavigation() {
     searchQuery,
     setSearchQuery,
     currentFloor,
+    setCurrentFloor,
+    isAdminMode,
     fetchNodes,
-  } = useNavigationStore();
+  } = useBlockNavigationStore();
 
   // Get searchable locations (rooms and entrances)
   const searchableLocations = useMemo(() => {
-    const locations: { node: MapNode; displayName: string; category: string }[] = [];
+    const locations: {
+      node: MapNode;
+      displayName: string;
+      category: string;
+    }[] = [];
+
     // // Add rooms
-    // rooms.forEach((room) => {
-    //   const node = nodes.find((n) => n.id === room.nodeId);
-    //   if (node) {
-    //     const building = buildings.find((b) => b.id === room.buildingId);
-    //     locations.push({
-    //       node,
-    //       displayName: room.name,
-    //       category: `${building?.shortName || ''} - ${room.category || 'Room'}`,
-    //     });
-    //   }
-    // });
-    
+    rooms.forEach((room) => {
+      const node = nodes.find((n) => n.id === room.nodeId);
+      if (node) {
+        const building = buildings.find((b) => b.id === room.buildingId);
+        locations.push({
+          node,
+          displayName: room.name,
+          category: `${building?.shortName || ""} - ${room.category || "Room"}`,
+        });
+      }
+    });
+
+    // console.log("rooms: ", rooms);
+
     // Add entrances
     nodes
-      .filter((n) => n.type === 'ENTRANCE')
+      .filter((n) => {
+        if (n.type === "ENTRANCE" || n.type === "ROOM") {
+          return n;
+        }
+      })
       .forEach((node) => {
         const building = buildings.find((b) => b.id === node.buildingId);
         locations.push({
           node,
           displayName: node.name,
-          category: building?.shortName || 'Entrance',
+          category: building?.shortName || "Entrance",
         });
       });
-    
+
     return locations;
-  }, [nodes, buildings]);
+  }, [nodes, rooms, buildings]);
 
   // Filter locations based on search query
   const filteredLocations = useMemo(() => {
     if (!searchQuery.trim()) return searchableLocations;
-    
+
     const query = searchQuery.toLowerCase();
     return searchableLocations.filter(
       (loc) =>
         loc.displayName.toLowerCase().includes(query) ||
-        loc.category.toLowerCase().includes(query)
+        loc.category.toLowerCase().includes(query),
     );
   }, [searchableLocations, searchQuery]);
 
   // Get node by ID
   const getNodeById = useCallback(
     (id: string) => nodes.find((n) => n.id === id),
-    [nodes]
+    [nodes],
   );
 
   // Get room by node ID
   const getRoomByNodeId = useCallback(
     (nodeId: string) => rooms.find((r) => r.nodeId === nodeId),
-    [rooms]
+    [rooms],
   );
 
   // Get building by ID
   const getBuildingById = useCallback(
     (id: string) => buildings.find((b) => b.id === id),
-    [buildings]
+    [buildings],
   );
 
   // Get nodes for current floor
-  const nodesOnCurrentFloor = useMemo(
-    () => nodes.filter((n) => n.floor === currentFloor || n.floor === 0),
-    [nodes, currentFloor]
-  );
+  const nodesOnCurrentFloor = useMemo(() => {
+    if (!isAdminMode) {
+      return nodes.filter((n) => n.floor === currentFloor);
+    }
+
+    return nodes.filter(
+      (n) =>
+        n.floor === currentFloor || n.type === "ROOM" || n.type === "STAIRS",
+    );
+  }, [nodes, currentFloor, isAdminMode]);
 
   // Swap start and end
   const swapStartEnd = useCallback(() => {
@@ -106,11 +125,11 @@ export function useNavigation() {
     searchQuery,
     currentFloor,
     nodesOnCurrentFloor,
-    
+
     // Computed
     searchableLocations,
     filteredLocations,
-    
+
     // Actions
     setStartNode,
     setEndNode,
@@ -118,7 +137,10 @@ export function useNavigation() {
     setSearchQuery,
     swapStartEnd,
     fetchNodes,
-    
+
+    setCurrentFloor,
+    isAdminMode,
+
     // Helpers
     getNodeById,
     getRoomByNodeId,

@@ -1,36 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { MapCanvas } from "@/components/Map/MapCanvas";
-import { NavigationPanel } from "@/components/ui/NavigationPanel";
-import { AdminPanel } from "@/components/Admin/AdminPanel";
-import { useNavigationStore } from "@/store/useNavigationStore";
-import {
-  Menu,
-  X,
-  Map,
-  Info,
-  Settings,
-  UserRoundCog,
-  LogOutIcon,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X, Map, Info, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useAdminMode } from "@/hooks/useAdminMode";
+import { EngineeringMap } from "@/components/Map/building/engineering-block/EngineeringMap";
+import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
 import AboutModal from "@/components/AboutModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { BlockAdminPanel } from "@/components/Admin/BlockAdminPanel";
+import { useNavigationStore } from "@/store/useNavigationStore";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
+import { useAdminMode } from "@/hooks/useAdminMode";
 import EditNodeModal from "@/components/EditNodeModal";
-import { useNavigation } from "@/hooks/useNavigation";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 
-const Index = () => {
+const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { isAdminMode, fetchBuildings, fetchNodes, nodes } =
-    useNavigationStore();
+  const { isAdminMode, fetchNodes, currentFloor, setCurrentFloor } =
+    useBlockNavigationStore();
+
   const { editingMode, setEditingMode } = useAdminMode();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
-  const { setStartNode, setEndNode } = useNavigation();
+  const { setStartNode, setEndNode, nodes } = useBlockNavigation();
+
   const router = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -41,6 +35,8 @@ const Index = () => {
   console.log(toNode);
 
   useEffect(() => {
+    console.log("================running====================");
+    if (!fromNode || !toNode) return;
     const startNode = nodes.find((n) => n.id === fromNode);
     const endNode = nodes.find((n) => n.id === toNode);
 
@@ -49,10 +45,9 @@ const Index = () => {
   }, [fromNode, toNode, nodes, setStartNode, setEndNode]);
 
   useEffect(() => {
-    console.log("fetching buildings and nodes");
-    fetchBuildings();
-    fetchNodes();
-  }, [fetchBuildings, fetchNodes]);
+    console.log("fetching nodes ");
+    fetchNodes(currentFloor);
+  }, [fetchNodes, currentFloor]);
 
   const handleAdminToggle = () => {
     adminModeToggle();
@@ -69,6 +64,12 @@ const Index = () => {
     router("/");
   };
 
+  // update nodes when floor changes
+  const handleFloorChange = (floor: number) => {
+    setCurrentFloor(floor);
+    fetchNodes(currentFloor);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
@@ -78,7 +79,7 @@ const Index = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden"
+            className="bg-emerald-500/70 text-black"
           >
             {isSidebarOpen ? (
               <X className="h-5 w-5" />
@@ -101,6 +102,15 @@ const Index = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router("/")}
+            className="bg-card/90 backdrop-blur-sm shadow-md"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Go Back
+          </Button>
           <Button
             variant="ghost"
             size="icon"
@@ -131,15 +141,7 @@ const Index = () => {
           )}
         >
           <div className="flex-1 overflow-y-auto scrollbar-thin p-4">
-            {isAdminMode ? <AdminPanel /> : <NavigationPanel />}
-          </div>
-
-          {/* Quick tips */}
-          <div className="p-4 border-t border-border bg-muted/30">
-            <p className="text-xs text-muted-foreground">
-              <strong>Tip:</strong> Click on buildings or nodes on the map to
-              quickly select them as start/end points.
-            </p>
+            {isAdminMode ? <BlockAdminPanel /> : <BlockNavigationPanel />}
           </div>
         </aside>
 
@@ -153,7 +155,75 @@ const Index = () => {
 
         {/* Map area */}
         <main className="flex-1 relative overflow-hidden">
-          <MapCanvas />
+          <EngineeringMap />
+
+          {/* Floor selector */}
+          <div className="absolute top-40 left-3 z-50">
+            <div className="backdrop-blur-md bg-white/85 border border-black/10 rounded-xl px-3 py-2 shadow-lg">
+              {/* Header */}
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-700 text-center mb-2">
+                Floor
+              </p>
+
+              {/* Buttons */}
+              <div className="flex flex-col gap-1.5">
+                {[0, 1, 2, 3].map((floor) => {
+                  const isActive = currentFloor === floor;
+
+                  return (
+                    <button
+                      key={floor}
+                      onClick={() => handleFloorChange(floor)}
+                      className={cn(
+                        "w-12 h-9 rounded-lg text-xs font-semibold",
+                        "flex items-center justify-center transition-all duration-200",
+                        isActive
+                          ? "bg-primary text-white shadow-md scale-105"
+                          : "bg-gray-100 text-gray-800 hover:bg-gray-200",
+                      )}
+                    >
+                      {floor === 0 ? "GF" : `F${floor}`}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute right-4 bottom-14 z-40 backdrop-blur-md bg-white/80 border border-black/10 rounded-xl px-3 py-2 shadow-lg">
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-gray-700 text-center mb-2">
+              Legend
+            </h3>
+
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 bg-green-600 rounded-full" />
+                  <span className="text-xs font-medium text-gray-800">
+                    Entrance
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 bg-blue-600 rounded-full" />
+                  <span className="text-xs font-medium text-gray-800">
+                    Room
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 bg-yellow-500 rounded-full" />
+                  <span className="text-xs font-medium text-gray-800">
+                    Stairs
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Mobile toggle for sidebar */}
           {!isSidebarOpen && (
@@ -179,4 +249,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default EngineeringBlock;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { ArrowUpDown, X, Navigation } from 'lucide-react';
-import { LocationSelector } from './LocationSelector';
-import { InfoPanel } from './InfoPanel';
-import { useNavigation } from '@/hooks/useNavigation';
 import { Button } from '@/components/ui/button';
+import { InfoPanel } from '../ui/InfoPanel';
+import { useBlockNavigation } from '@/hooks/useBlockNavigation';
+import { BlockLocationSelector } from './BlockLocationSelector';
 
-export function NavigationPanel() {
+export function BlockNavigationPanel() {
   const {
     startNode,
     endNode,
@@ -15,7 +15,7 @@ export function NavigationPanel() {
     setEndNode,
     clearPath,
     swapStartEnd,
-  } = useNavigation();
+  } = useBlockNavigation();
 
   return (
     <div className="flex flex-col gap-4">
@@ -23,7 +23,7 @@ export function NavigationPanel() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Navigation className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold text-lg">Find Route</h2>
+          <h2 className="font-semibold text-lg">Find Route - Room</h2>
         </div>
         
         {(startNode || endNode) && (
@@ -41,7 +41,7 @@ export function NavigationPanel() {
 
       {/* Location inputs */}
       <div className="relative flex flex-col gap-2">
-        <LocationSelector
+        <BlockLocationSelector
           type="start"
           selectedNode={startNode}
           onSelect={setStartNode}
@@ -58,7 +58,7 @@ export function NavigationPanel() {
           </button>
         )}
         
-        <LocationSelector
+        <BlockLocationSelector
           type="end"
           selectedNode={endNode}
           onSelect={setEndNode}

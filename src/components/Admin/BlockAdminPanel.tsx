@@ -10,16 +10,14 @@ import {
   Move,
   X,
   Check,
-  Edit,
   User,
 } from "lucide-react";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { Button } from "@/components/ui/button";
-import { MapNode, NodeType } from "@/types/navigation";
+import { NodeType } from "@/types/navigation";
 import { cn } from "@/lib/utils";
 import { useBlockAdminMode } from "@/hooks/useBlockAdminMode";
-import EditNodeModal from "../EditNodeModal";
 
 const NODE_TYPES: { type: NodeType; label: string; color: string }[] = [
   { type: "ROOM", label: "Room", color: "bg-primary" },
@@ -29,27 +27,30 @@ const NODE_TYPES: { type: NodeType; label: string; color: string }[] = [
   { type: "ELEVATOR", label: "Elevator", color: "bg-accent" },
 ];
 
-export function AdminPanel() {
+export function BlockAdminPanel() {
+  const [showExport, setShowExport] = useState(false);
+
   const {
     isAdminMode,
     selectedNode,
     isConnecting,
     connectionStart,
+    toggleAdminMode,
+    selectNode,
     deleteNode,
     startConnection,
     cancelConnection,
     newNodeType,
     setNewNodeType,
     exportData,
-    setEditingMode,
-  } = useAdminMode();
+  } = useBlockAdminMode();
 
   if (!isAdminMode) return null;
 
   return (
     <>
       {/* Admin toolbar */}
-      <div className=" w-72 animate-slide-up">
+      <div className="w-72 animate-slide-up">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 bg-purple-600 p-4 w-full rounded">
             <User color="white" className="h-5 w-5 text-primary" />
@@ -77,7 +78,9 @@ export function AdminPanel() {
             {NODE_TYPES.map(({ type, label, color }) => (
               <button
                 key={type}
-                onClick={() => setNewNodeType(type)}
+                onClick={() => {
+                  setNewNodeType(type);
+                }}
                 className={cn(
                   "px-2 py-1 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5",
                   newNodeType === type
@@ -96,7 +99,7 @@ export function AdminPanel() {
         {selectedNode && (
           <div className="mb-4 p-3 bg-card border border-border rounded-lg">
             <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-              Selected: {selectedNode.name}
+              Selected: {selectedNode.name} [{selectedNode.floor}]
             </p>
             <div className="flex flex-wrap gap-2">
               {isConnecting ? (
@@ -121,17 +124,6 @@ export function AdminPanel() {
                 </Button>
               )}
               <Button
-                variant="default"
-                size="sm"
-                onClick={() => {
-                  setEditingMode(selectedNode);
-                }}
-                className="flex-1"
-              >
-                <Edit color="white" size={13} />
-                Edit
-              </Button>
-              <Button
                 variant="destructive"
                 size="sm"
                 onClick={() => deleteNode(selectedNode.id)}
@@ -147,6 +139,17 @@ export function AdminPanel() {
                 {Math.round(selectedNode.y)})
               </p>
               <p>Connections: {selectedNode.connections.length}</p>
+              {/* Connection indicator */}
+              {isConnecting && connectionStart && (
+                <div className="mt-2 -translate-x-1/2 z-20 map-panel px-4 py-2 animate-fade-in border-accent">
+                  <div className="flex items-center gap-2">
+                    <Link2 className="h-4 w-4 text-accent" />
+                    <span className="text-sm">
+                      Connecting from <strong>{connectionStart.name}</strong>
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -172,18 +175,6 @@ export function AdminPanel() {
           </Button>
         </div>
       </div>
-
-      {/* Connection indicator */}
-      {isConnecting && connectionStart && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 map-panel px-4 py-2 animate-fade-in border-accent">
-          <div className="flex items-center gap-2">
-            <Link2 className="h-4 w-4 text-accent" />
-            <span className="text-sm">
-              Connecting from <strong>{connectionStart.name}</strong>
-            </span>
-          </div>
-        </div>
-      )}
     </>
   );
 }

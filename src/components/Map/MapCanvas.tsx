@@ -8,7 +8,7 @@ import { useNavigation } from "@/hooks/useNavigation";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { MapNode, Building } from "@/types/navigation";
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
-import { Button } from "@/components/UI/button";
+import { Button } from "@/components/ui/button";
 
 interface MapCanvasProps {
   width?: number;
@@ -43,11 +43,13 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
     selectNode,
     handleMapClick,
     createNodeAtPosition,
+    newNodeType
   } = useAdminMode();
 
   // Handle SVG click
   const onSvgClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
+      console.log("triggered svg click")
       if (!svgRef.current) return;
 
       const rect = svgRef.current.getBoundingClientRect();
@@ -67,6 +69,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
   // Handle double click to create node in admin mode
   const onSvgDoubleClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
+      console.log("triggered double click")
       if (!isAdminMode || !svgRef.current) return;
 
       const rect = svgRef.current.getBoundingClientRect();
@@ -76,9 +79,9 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
 
-      createNodeAtPosition(x, y);
+      createNodeAtPosition(x, y, newNodeType);
     },
-    [isAdminMode, createNodeAtPosition],
+    [isAdminMode, createNodeAtPosition, newNodeType],
   );
 
   // Handle node click
@@ -125,7 +128,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
-        maxScale={3}
+        maxScale={5}
         onTransformed={(_, state) => {
           setZoomLevel(state.scale);
         }}
@@ -207,7 +210,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
                 {/* Outdoor paths (decorative) */}
                 <g className="outdoor-paths" opacity={0.3}>
                   <path
-                    d="M 460 207 Q 493 207 551 210 Q 551 250 551 288 "
+                    d="M 460 207 Q 493 207 551 210 Q 551 250 551 308"
                     fill="none"
                     stroke="hsl(var(--muted-foreground))"
                     strokeWidth={20}
@@ -223,7 +226,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
                   />
 
                   <path
-                    d="M 490 291 Q 523 292 551 288 "
+                    d="M 490 308 Q 524 308 551 308 "
                     fill="none"
                     stroke="hsl(var(--muted-foreground))"
                     strokeWidth={20}
@@ -245,7 +248,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
                     strokeLinecap="round"
                   />
                   <path
-                    d="M 778 207 Q 672 208 671 136"
+                    d="M 798 209 C 656 210 666 210 664 79"
                     fill="none"
                     stroke="hsl(var(--muted-foreground))"
                     strokeWidth={20}
