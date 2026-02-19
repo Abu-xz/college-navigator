@@ -137,8 +137,8 @@ export const useNavigationStore = create<NavigationStore>((set, get) => ({
   editingMode: null,
   setEditingMode: (node: MapNode) => {
     set({
-      editingMode: node
-    })
+      editingMode: node,
+    });
   },
 
   // Fetch Map Building data
@@ -160,7 +160,7 @@ export const useNavigationStore = create<NavigationStore>((set, get) => ({
     try {
       const response = await mapNodesService.getMapNodes();
       const data = response.data;
-      console.log("fetched updated nodes")
+      console.log("fetched updated nodes");
       set({
         nodes: data,
       });

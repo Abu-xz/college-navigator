@@ -18,7 +18,6 @@ import { useAdminMode } from "@/hooks/useAdminMode";
 import AboutModal from "@/components/AboutModal";
 import { useNavigate } from "react-router-dom";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
-import { buildingsService } from "@/services/buildings.service";
 import EditNodeModal from "@/components/EditNodeModal";
 
 const Index = () => {

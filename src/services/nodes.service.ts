@@ -1,10 +1,12 @@
 import axios from "axios";
 import { BaseUrl } from "./api";
-import { MapNode, NodeType } from "@/types/navigation";
+import { BuildingId, MapNode, NodeType } from "@/types/navigation";
 
 export const mapNodesService = {
-  getMapNodes: async () => {
-    const res = await axios.get(`${BaseUrl}/admin/nodes`);
+  getMapNodes: async (buildingId: BuildingId = "", floor: number = 0) => {
+    const res = await axios.get(
+      `${BaseUrl}/admin/nodes?buildingId=${buildingId}&floor=${floor}`,
+    );
     console.log("Map nodes response: ", res.data);
     return res.data;
   },

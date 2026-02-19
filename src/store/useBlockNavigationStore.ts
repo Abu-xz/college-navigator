@@ -5,6 +5,7 @@ import {
   Building,
   Room,
   NodeType,
+  BuildingId,
 } from "@/types/navigation";
 import {
   initialNodes,
@@ -20,7 +21,9 @@ import {
   disconnectNodes,
   generateNodeId,
 } from "@/engine/graphUtils";
-
+import { buildingsService } from "@/services/buildings.service";
+import { mapNodesService } from "@/services/nodes.service";
+import { toast } from "sonner";
 interface BlockNavigationStore {
   // Map data
   nodes: MapNode[];
@@ -43,9 +46,25 @@ interface BlockNavigationStore {
   newNodeType: NodeType;
   setNewNodeType: (type: NodeType) => void;
 
+  // Node Edit
+  editingMode: MapNode | null;
+  setEditingMode: (node: MapNode) => void;
+
   // Viewport
   currentFloor: number;
   searchQuery: string;
+
+  // Fetch Map Data
+  setBuildings: (data: Building[]) => void;
+  fetchBuildings: () => Promise<void>;
+
+  // Fetch Nodes Data
+  setNodes: (data: MapNode[]) => void;
+  fetchNodes: (floor: number) => Promise<void>;
+
+  // Fetch Rooms data
+  setRooms: (data: Room[]) => void;
+  fetchRooms: () => Promise<void>;
 
   // Actions
   setStartNode: (node: MapNode | null) => void;
@@ -57,6 +76,7 @@ interface BlockNavigationStore {
   toggleAdminMode: () => void;
   selectNode: (node: MapNode | null) => void;
   addNewNode: (
+    id: string,
     x: number,
     y: number,
     type: MapNode["type"],
@@ -79,23 +99,12 @@ interface BlockNavigationStore {
   importData: (json: string) => void;
 }
 
-// Initialize nodes with connections
-// function initializeNodesWithConnections(): MapNode[] {
-//   let nodes = [...initialNodes];
-
-//   initialConnections.forEach(([id1, id2]) => {
-//     nodes = connectNodes(nodes, id1, id2);
-//   });
-
-//   return nodes;
-// }
-
 export const useBlockNavigationStore = create<BlockNavigationStore>(
   (set, get) => ({
     // Initial state
     nodes: [],
     buildings: [],
-    rooms,
+    rooms: [],
 
     startNode: null,
     endNode: null,
@@ -114,6 +123,59 @@ export const useBlockNavigationStore = create<BlockNavigationStore>(
     // New Node type
     setNewNodeType: (type) => {
       set({ newNodeType: type });
+    },
+
+    // Edit Node
+    editingMode: null,
+    setEditingMode: (node: MapNode) => {
+      set({
+        editingMode: node,
+      });
+    },
+
+    // Fetch Map Building data
+    setBuildings: (data) => set({ buildings: data }),
+    fetchBuildings: async () => {
+      try {
+        const response = await buildingsService.getBuildings();
+        const data = response.data;
+        set({
+          buildings: data,
+        });
+      } catch (error) {
+        console.error("Failed to fetch buildings", error.response.data);
+      }
+    },
+    // Fetch Map Nodes data
+    setNodes: (data) => set({ nodes: data }),
+    fetchNodes: async (floor) => {
+      try {
+        const response = await mapNodesService.getMapNodes(
+          "engineering",
+          // floor,
+        );
+        const data = response.data;
+        console.log("fetched updated nodes");
+        set({
+          nodes: data,
+        });
+      } catch (err) {
+        console.error("Failed to fetch buildings", err);
+      }
+    },
+
+    setRooms: (data) => set({ rooms: data }),
+    fetchRooms: async (): Promise<void> => {
+      try {
+        const response = await mapNodesService.getMapNodes("engineering");
+        const data = response.data;
+        console.log("fetched updated nodes");
+        set({
+          nodes: data,
+        });
+      } catch (err) {
+        console.error("Failed to fetch buildings", err);
+      }
     },
 
     // Navigation actions
@@ -173,9 +235,9 @@ export const useBlockNavigationStore = create<BlockNavigationStore>(
       }
     },
 
-    addNewNode: (x, y, type, name, buildingId) => {
+    addNewNode: (id, x, y, type, name, buildingId) => {
       const newNode: MapNode = {
-        id: generateNodeId(),
+        id,
         type,
         name,
         floor: get().currentFloor,
@@ -184,19 +246,27 @@ export const useBlockNavigationStore = create<BlockNavigationStore>(
         y,
         connections: [],
       };
-      console.log(newNode);
+
       set((state) => ({
         nodes: addNode(state.nodes, newNode),
         selectedNode: newNode,
       }));
     },
 
-    deleteNode: (nodeId) => {
-      set((state) => ({
-        nodes: removeNode(state.nodes, nodeId),
-        selectedNode:
-          state.selectedNode?.id === nodeId ? null : state.selectedNode,
-      }));
+    deleteNode: async (nodeId) => {
+      try {
+        const response = await mapNodesService.deleteNode(nodeId);
+        if (response.success) {
+          set((state) => ({
+            nodes: removeNode(state.nodes, nodeId),
+            selectedNode:
+              state.selectedNode?.id === nodeId ? null : state.selectedNode,
+          }));
+        }
+      } catch (error) {
+        toast("Unable to delete Node. Please Try again later");
+        console.log("Delete Node error: ", error.response.data);
+      }
     },
 
     startConnection: (node) => {
@@ -208,8 +278,13 @@ export const useBlockNavigationStore = create<BlockNavigationStore>(
 
       if (!connectionStart) return;
 
+      const updatedNodes = await connectNodes(
+        nodes,
+        connectionStart.id,
+        targetNode.id,
+      );
       set({
-        nodes: await connectNodes(nodes, connectionStart.id, targetNode.id),
+        nodes: updatedNodes,
         isConnecting: false,
         connectionStart: null,
       });

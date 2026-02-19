@@ -49,7 +49,7 @@ export function useNavigation() {
       });
     
     return locations;
-  }, [nodes, rooms, buildings]);
+  }, [nodes, buildings]);
 
   // Filter locations based on search query
   const filteredLocations = useMemo(() => {
