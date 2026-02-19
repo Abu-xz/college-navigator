@@ -104,6 +104,7 @@ export function NodeLayer({
               onClick={(e) => {
                 e.stopPropagation();
                 onNodeClick?.(node);
+                console.log("selected Node: ", node);
               }}
               onMouseEnter={() => onNodeHover?.(node)}
               onMouseLeave={() => onNodeHover?.(null)}

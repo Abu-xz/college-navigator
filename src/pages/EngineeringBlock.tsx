@@ -5,12 +5,13 @@ import { cn } from "@/lib/utils";
 import { EngineeringMap } from "@/components/Map/building/engineering-block/EngineeringMap";
 import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
 import AboutModal from "@/components/AboutModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { BlockAdminPanel } from "@/components/Admin/BlockAdminPanel";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import EditNodeModal from "@/components/EditNodeModal";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -22,7 +23,24 @@ const EngineeringBlock = () => {
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
+  const { setStartNode, setEndNode, nodes } = useBlockNavigation();
+
   const router = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const fromNode = searchParams.get("fromNode");
+  const toNode = searchParams.get("toNode");
+
+  console.log(fromNode);
+  console.log(toNode);
+
+  useEffect(() => {
+    const startNode = nodes.find((n) => n.id === fromNode);
+    const endNode = nodes.find((n) => n.id === toNode);
+
+    setStartNode(startNode);
+    setEndNode(endNode);
+  }, [fromNode, toNode, nodes, setStartNode, setEndNode]);
 
   useEffect(() => {
     console.log("fetching nodes ");
