@@ -99,7 +99,7 @@ export function BlockAdminPanel() {
         {selectedNode && (
           <div className="mb-4 p-3 bg-card border border-border rounded-lg">
             <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-              Selected: {selectedNode.name}
+              Selected: {selectedNode.name} [{selectedNode.floor}]
             </p>
             <div className="flex flex-wrap gap-2">
               {isConnecting ? (

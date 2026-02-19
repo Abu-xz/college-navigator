@@ -16,10 +16,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import AboutModal from "@/components/AboutModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
-import { buildingsService } from "@/services/buildings.service";
 import EditNodeModal from "@/components/EditNodeModal";
+import { useNavigation } from "@/hooks/useNavigation";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -30,7 +30,23 @@ const Index = () => {
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
+  const { setStartNode, setEndNode } = useNavigation();
   const router = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const fromNode = searchParams.get("fromNode");
+  const toNode = searchParams.get("toNode");
+
+  console.log(fromNode);
+  console.log(toNode);
+
+  useEffect(() => {
+    const startNode = nodes.find((n) => n.id === fromNode);
+    const endNode = nodes.find((n) => n.id === toNode);
+
+    setStartNode(startNode);
+    setEndNode(endNode);
+  }, [fromNode, toNode, nodes, setStartNode, setEndNode]);
 
   useEffect(() => {
     console.log("fetching buildings and nodes");

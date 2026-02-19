@@ -18,7 +18,8 @@ export function useBlockNavigation() {
     setSearchQuery,
     currentFloor,
     setCurrentFloor,
-    isAdminMode
+    isAdminMode,
+    fetchNodes,
   } = useBlockNavigationStore();
 
   // Get searchable locations (rooms and entrances)
@@ -29,7 +30,7 @@ export function useBlockNavigation() {
       category: string;
     }[] = [];
 
-    // Add rooms
+    // // Add rooms
     rooms.forEach((room) => {
       const node = nodes.find((n) => n.id === room.nodeId);
       if (node) {
@@ -37,14 +38,20 @@ export function useBlockNavigation() {
         locations.push({
           node,
           displayName: room.name,
-          category: ` ${room.category || "Room"} | Floor  ${room.floor} `,
+          category: `${building?.shortName || ""} - ${room.category || "Room"}`,
         });
       }
     });
 
+    // console.log("rooms: ", rooms);
+
     // Add entrances
     nodes
-      .filter((n) => n.type === "ENTRANCE")
+      .filter((n) => {
+        if (n.type === "ENTRANCE" || n.type === "ROOM") {
+          return n;
+        }
+      })
       .forEach((node) => {
         const building = buildings.find((b) => b.id === node.buildingId);
         locations.push({
@@ -89,13 +96,15 @@ export function useBlockNavigation() {
 
   // Get nodes for current floor
   const nodesOnCurrentFloor = useMemo(() => {
-    const currentFloorNodes = nodes.filter((n) => {
-      const isCurrentFloorNode = n.floor === currentFloor;
-      return isCurrentFloorNode ?? n
+    if (!isAdminMode) {
+      return nodes.filter((n) => n.floor === currentFloor);
+    }
 
-    });
-    return currentFloorNodes;
-  }, [nodes, currentFloor]);
+    return nodes.filter(
+      (n) =>
+        n.floor === currentFloor || n.type === "ROOM" || n.type === "STAIRS",
+    );
+  }, [nodes, currentFloor, isAdminMode]);
 
   // Swap start and end
   const swapStartEnd = useCallback(() => {
@@ -115,7 +124,6 @@ export function useBlockNavigation() {
     isCalculating,
     searchQuery,
     currentFloor,
-    setCurrentFloor,
     nodesOnCurrentFloor,
 
     // Computed
@@ -128,8 +136,9 @@ export function useBlockNavigation() {
     clearPath,
     setSearchQuery,
     swapStartEnd,
+    fetchNodes,
 
-    // Admin
+    setCurrentFloor,
     isAdminMode,
 
     // Helpers

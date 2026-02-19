@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
-import { MapNode } from '@/types/navigation';
+import React, { useMemo } from "react";
+import { MapNode } from "@/types/navigation";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 
 interface ConnectionLayerProps {
   nodes: MapNode[];
@@ -15,25 +16,35 @@ export function ConnectionLayer({
   onConnectionClick,
 }: ConnectionLayerProps) {
   // Get all unique connections
+  const { currentFloor } = useBlockNavigation();
+
+  const floorNodes = useMemo(() => {
+    return nodes.filter((node) => node.floor === currentFloor);
+  }, [nodes, currentFloor]);
+
   const connections = useMemo(() => {
     const lines: { from: MapNode; to: MapNode; key: string }[] = [];
     const seen = new Set<string>();
 
-    nodes.forEach((node) => {
+    floorNodes.forEach((node) => {
       node.connections.forEach((conn) => {
-        const key = [node.id, conn.nodeId].sort().join('-');
+        const toNode = floorNodes.find((n) => n.id === conn.nodeId);
+
+        if (!toNode) return; // 🚨 skip cross-floor connection
+
+        const key = [node.id, conn.nodeId].sort().join("-");
+
         if (!seen.has(key)) {
-          const toNode = nodes.find((n) => n.id === conn.nodeId);
-          if (toNode) {
-            lines.push({ from: node, to: toNode, key });
-            seen.add(key);
-          }
+          lines.push({ from: node, to: toNode, key });
+          seen.add(key);
         }
       });
     });
 
     return lines;
-  }, [nodes]);
+  }, [floorNodes]);
+
+  if (!floorNodes.length) return null;
 
   if (!isAdminMode) {
     // In normal mode, show faint connection lines
@@ -70,13 +81,13 @@ export function ConnectionLayer({
             y2={to.y}
             stroke={
               isHighlighted
-                ? 'hsl(var(--primary))'
-                : 'hsl(var(--map-connection))'
+                ? "hsl(var(--primary))"
+                : "hsl(var(--map-connection))"
             }
             strokeWidth={isHighlighted ? 3 : 2}
             strokeLinecap="round"
             className="connection-line"
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             onClick={(e) => {
               e.stopPropagation();
               onConnectionClick?.(from.id, to.id);

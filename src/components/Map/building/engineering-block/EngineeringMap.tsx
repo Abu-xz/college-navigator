@@ -5,10 +5,10 @@ import { MapNode, Building } from "@/types/navigation";
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PathOverlay } from "../../PathOverlay";
-import { ConnectionLayer } from "../../ConnectionLayer";
-import { NodeLayer } from "../../NodeLayer";
 import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import { useBlockAdminMode } from "@/hooks/useBlockAdminMode";
+import { NodeLayer } from "./NodeLayer";
+import { ConnectionLayer } from "./ConnectionLayer";
 
 interface MapCanvasProps {
   width?: number;
@@ -174,24 +174,6 @@ export function EngineeringMap({ width, height }: MapCanvasProps) {
       }
     },
     [isAdminMode, selectNode, startNode, endNode, setStartNode, setEndNode],
-  );
-
-  // Handle building click
-  const onBuildingClick = useCallback(
-    (building: Building) => {
-      // Find the entrance of this building
-      const entrance = nodes.find(
-        (n) => n.buildingId === building.id && n.type === "ENTRANCE",
-      );
-      if (entrance && !isAdminMode) {
-        if (!startNode) {
-          setStartNode(entrance);
-        } else if (!endNode) {
-          setEndNode(entrance);
-        }
-      }
-    },
-    [nodes, isAdminMode, startNode, endNode, setStartNode, setEndNode],
   );
 
   return (

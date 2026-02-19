@@ -1,33 +1,51 @@
-import { useState } from "react";
-import {
-  Menu,
-  X,
-  Map,
-  Info,
-  LogOut,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X, Map, Info, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { EngineeringMap } from "@/components/Map/building/engineering-block/EngineeringMap";
 import { BlockNavigationPanel } from "@/components/navigation/BlockNavigationPanel";
-import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import AboutModal from "@/components/AboutModal";
-import { useNavigate } from "react-router-dom";
-import { useBlockAdminMode } from "@/hooks/useBlockAdminMode";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { BlockAdminPanel } from "@/components/Admin/BlockAdminPanel";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
+import { useAdminMode } from "@/hooks/useAdminMode";
+import EditNodeModal from "@/components/EditNodeModal";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { isAdminMode, setCurrentFloor, currentFloor } = useBlockNavigation();
-  const { toggleAdminMode } = useBlockAdminMode();
+  const { isAdminMode, fetchNodes, currentFloor, setCurrentFloor } =
+    useBlockNavigationStore();
+
+  const { editingMode, setEditingMode } = useAdminMode();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
+  const { setStartNode, setEndNode, nodes } = useBlockNavigation();
 
   const router = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const fromNode = searchParams.get("fromNode");
+  const toNode = searchParams.get("toNode");
+
+  console.log(fromNode);
+  console.log(toNode);
+
+  useEffect(() => {
+    const startNode = nodes.find((n) => n.id === fromNode);
+    const endNode = nodes.find((n) => n.id === toNode);
+
+    setStartNode(startNode);
+    setEndNode(endNode);
+  }, [fromNode, toNode, nodes, setStartNode, setEndNode]);
+
+  useEffect(() => {
+    console.log("fetching nodes ");
+    fetchNodes(currentFloor);
+  }, [fetchNodes, currentFloor]);
 
   const handleAdminToggle = () => {
     adminModeToggle();
@@ -44,6 +62,12 @@ const EngineeringBlock = () => {
     router("/");
   };
 
+  // update nodes when floor changes
+  const handleFloorChange = (floor: number) => {
+    setCurrentFloor(floor);
+    fetchNodes(currentFloor);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
@@ -53,7 +77,7 @@ const EngineeringBlock = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden"
+            className="bg-emerald-500/70 text-black"
           >
             {isSidebarOpen ? (
               <X className="h-5 w-5" />
@@ -147,7 +171,7 @@ const EngineeringBlock = () => {
                   return (
                     <button
                       key={floor}
-                      onClick={() => setCurrentFloor(floor)}
+                      onClick={() => handleFloorChange(floor)}
                       className={cn(
                         "w-12 h-9 rounded-lg text-xs font-semibold",
                         "flex items-center justify-center transition-all duration-200",
@@ -209,6 +233,13 @@ const EngineeringBlock = () => {
             >
               <Menu className="h-5 w-5" />
             </Button>
+          )}
+
+          {editingMode && (
+            <EditNodeModal
+              node={editingMode}
+              onClose={() => setEditingMode(null)}
+            />
           )}
         </main>
       </div>

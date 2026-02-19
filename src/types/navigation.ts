@@ -1,5 +1,8 @@
 // Node types for different locations on the map
-export type NodeType = 'ROOM' | 'WAYPOINT' | 'ENTRANCE' | 'STAIRS' | 'ELEVATOR';
+export type NodeType = "ROOM" | "WAYPOINT" | "ENTRANCE" | "STAIRS" | "ELEVATOR";
+
+// building types for different locations
+export type BuildingId = "engineering" | "";
 
 // A node represents a navigable point on the map
 export interface MapNode {
