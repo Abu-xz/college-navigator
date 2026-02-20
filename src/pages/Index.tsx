@@ -20,6 +20,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
 import EditNodeModal from "@/components/EditNodeModal";
 import { useNavigation } from "@/hooks/useNavigation";
+import { getUserLocation } from "@/geoLocation/getUserLocation";
+import { convertGeoToMapXY } from "@/geoLocation/convertGeoToMap";
+import { findNearestNode } from "@/geoLocation/findNearestNode";
+import { MAP_ANCHORS } from "@/data/campusData";
+import { toast } from "sonner";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -53,6 +58,29 @@ const Index = () => {
     fetchBuildings();
     fetchNodes();
   }, [fetchBuildings, fetchNodes]);
+
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        const { lat, lng } = await getUserLocation();
+
+        const { x, y } = convertGeoToMapXY(lat, lng, MAP_ANCHORS);
+
+        const nearestNode = findNearestNode(x, y, nodes);
+        console.log("lat: ", lat)
+        console.log("lng: ", lng)
+        console.log("Nearest Node",nearestNode);
+
+        if (nearestNode) {
+          setStartNode(nearestNode);
+        }
+      } catch (err) {
+        console.error("Location error", err);
+      }
+    };
+
+    detectLocation();
+  }, [nodes, setStartNode]);
 
   const handleAdminToggle = () => {
     adminModeToggle();
