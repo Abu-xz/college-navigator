@@ -1,4 +1,3 @@
-import React from "react";
 import { Clock, Route, MapPin, ArrowRight, Footprints } from "lucide-react";
 import { PathResult, MapNode } from "@/types/navigation";
 import { formatDistance, formatTime } from "@/engine/dijkstra";
@@ -19,7 +18,7 @@ export function InfoPanel({
 }: InfoPanelProps) {
   if (!startNode && !endNode) {
     return (
-      <div className="map-panel p-4 animate-fade-in">
+      <div className="map-panel p-4 animate-slide-up w-full flex flex-col min-h-0">
         <div className="flex items-center gap-3 text-muted-foreground">
           <MapPin className="h-5 w-5" />
           <p className="text-sm">
@@ -115,12 +114,11 @@ export function InfoPanel({
 
       {/* Route steps — Vertical */}
       {path.nodes.length > 1 && (
-        <div className="mt-5 pt-4 border-t border-border">
+        <div className="mt-5 pt-4 border-t border-border flex flex-col min-h-0">
           <p className="text-xs uppercase tracking-wide text-muted-foreground mb-3">
             Route Steps ({path.nodes.length})
           </p>
-
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 overflow-y-auto max-h-48 pr-1">
             {path.nodes.map((node, index) => (
               <div key={node.id} className="flex items-start gap-3">
                 {/* Dot + line */}
