@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X, Map, Info, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,22 +27,33 @@ const EngineeringBlock = () => {
 
   const router = useNavigate();
 
-  const [searchParams] = useSearchParams();
-  const fromNode = searchParams.get("fromNode");
-  const toNode = searchParams.get("toNode");
-
-  console.log(fromNode);
-  console.log(toNode);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const hasConsumedRef = useRef(false);
 
   useEffect(() => {
-    console.log("================running====================");
+    if (hasConsumedRef.current) return;
+
+    const fromNode = searchParams.get("fromNode");
+    const toNode = searchParams.get("toNode");
+
     if (!fromNode || !toNode) return;
+
     const startNode = nodes.find((n) => n.id === fromNode);
     const endNode = nodes.find((n) => n.id === toNode);
 
-    setStartNode(startNode);
-    setEndNode(endNode);
-  }, [fromNode, toNode, nodes, setStartNode, setEndNode]);
+    if (startNode && endNode) {
+      setStartNode(startNode);
+      setEndNode(endNode);
+
+      hasConsumedRef.current = true;
+
+      const params = new URLSearchParams(searchParams);
+      params.delete("fromNode");
+      params.delete("toNode");
+
+      setSearchParams(params, { replace: true });
+    }
+  }, [nodes]);
 
   useEffect(() => {
     console.log("fetching nodes ");

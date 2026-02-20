@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MapCanvas } from "@/components/Map/MapCanvas";
 import { NavigationPanel } from "@/components/ui/NavigationPanel";
 import { AdminPanel } from "@/components/Admin/AdminPanel";
@@ -38,20 +38,33 @@ const Index = () => {
   const { setStartNode, setEndNode } = useNavigation();
   const router = useNavigate();
 
-  const [searchParams] = useSearchParams();
-  const fromNode = searchParams.get("fromNode");
-  const toNode = searchParams.get("toNode");
-
-  console.log(fromNode);
-  console.log(toNode);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const hasConsumedRef = useRef(false);
 
   useEffect(() => {
+    if (hasConsumedRef.current) return;
+
+    const fromNode = searchParams.get("fromNode");
+    const toNode = searchParams.get("toNode");
+
+    if (!fromNode || !toNode) return;
+
     const startNode = nodes.find((n) => n.id === fromNode);
     const endNode = nodes.find((n) => n.id === toNode);
 
-    setStartNode(startNode);
-    setEndNode(endNode);
-  }, [fromNode, toNode, nodes, setStartNode, setEndNode]);
+    if (startNode && endNode) {
+      setStartNode(startNode);
+      setEndNode(endNode);
+
+      hasConsumedRef.current = true;
+
+      const params = new URLSearchParams(searchParams);
+      params.delete("fromNode");
+      params.delete("toNode");
+
+      setSearchParams(params, { replace: true });
+    }
+  }, [nodes]);
 
   useEffect(() => {
     console.log("fetching buildings and nodes");
@@ -67,9 +80,9 @@ const Index = () => {
         const { x, y } = convertGeoToMapXY(lat, lng, MAP_ANCHORS);
 
         const nearestNode = findNearestNode(x, y, nodes);
-        console.log("lat: ", lat)
-        console.log("lng: ", lng)
-        console.log("Nearest Node",nearestNode);
+        console.log("lat: ", lat);
+        console.log("lng: ", lng);
+        console.log("Nearest Node", nearestNode);
 
         if (nearestNode) {
           setStartNode(nearestNode);
