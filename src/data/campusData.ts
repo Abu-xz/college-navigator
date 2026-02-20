@@ -1,4 +1,4 @@
-import { MapNode, Building, Room } from "@/types/navigation";
+import { MapNode, Building, Room, MapAnchor } from "@/types/navigation";
 
 // Sample 5-building campus data
 export const buildings: Building[] = [
@@ -545,4 +545,11 @@ export const rooms: Room[] = [
     nodeId: "art_studio",
     category: "Studio",
   },
+];
+
+// map anchors
+export const MAP_ANCHORS: MapAnchor[] = [
+  { lat: 10.067887542610288, lng: 76.59574637435261, x: 940, y: 205 }, // Main Gate [entrance node]
+  { lat: 10.068224842911883, lng: 76.59387445306128, x: 488, y: 222 }, // Engineering [entrance node]
+  { lat: 10.068485110565735, lng: 76.5935218277275, x: 430, y: 178 }, // arts block [entrance node]
 ];

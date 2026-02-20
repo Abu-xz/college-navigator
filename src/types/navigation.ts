@@ -56,6 +56,14 @@ export interface PathResult {
   estimatedTimeMinutes: number; // in minutes
 }
 
+// Map calibration
+export interface MapAnchor {
+  lat: number;
+  lng: number;
+  x: number;
+  y: number;
+}
+
 // Map viewport state
 export interface ViewportState {
   scale: number;
