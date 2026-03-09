@@ -152,7 +152,7 @@ export function AdminPanel() {
         )}
 
         {/* Export/Import */}
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -170,7 +170,7 @@ export function AdminPanel() {
             <Download className="h-3 w-3 mr-1" />
             Export
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Connection indicator */}

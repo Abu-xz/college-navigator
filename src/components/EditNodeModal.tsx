@@ -1,4 +1,5 @@
 import { updateNode } from "@/engine/graphUtils";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import { useNavigation } from "@/hooks/useNavigation";
 import { mapNodesService } from "@/services/nodes.service";
 import { MapNode, NodeConnection, NodeType } from "@/types/navigation";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 type Props = {
   node: MapNode;
   onClose: () => void;
+  isBlock: boolean;
 };
 
 const NODE_TYPES: { type: NodeType; label: string; color: string }[] = [
@@ -19,10 +21,12 @@ const NODE_TYPES: { type: NodeType; label: string; color: string }[] = [
   { type: "ELEVATOR", label: "Elevator", color: "bg-accent" },
 ];
 
-export default function EditNodeModal({ node, onClose }: Props) {
+export default function EditNodeModal({ node, onClose, isBlock }: Props) {
   const [form, setForm] = useState<MapNode>({ ...node });
 
   const { fetchNodes } = useNavigation();
+  const fetchBlockNodes = useBlockNavigation().fetchNodes;
+  const currentFloor = useBlockNavigation().currentFloor;
 
   const updateField = (key: keyof MapNode, value: unknown) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -50,8 +54,11 @@ export default function EditNodeModal({ node, onClose }: Props) {
       if (res.success) {
         toast(res.message);
         // Fetch updated Nodes;
-        console.log("fetching update nodes")
-        fetchNodes();
+        if (isBlock) {
+          fetchBlockNodes(currentFloor);
+        } else {
+          fetchNodes();
+        }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -141,7 +148,7 @@ export default function EditNodeModal({ node, onClose }: Props) {
               {form.connections.map((conn, i) => (
                 <div key={i} className="flex gap-2 items-center">
                   <input
-                    className="input flex-1"
+                    className="input"
                     placeholder="Node ID"
                     value={conn.nodeId}
                     onChange={(e) =>

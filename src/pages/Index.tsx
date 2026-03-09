@@ -120,7 +120,6 @@ const Index = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden"
           >
             {isSidebarOpen ? (
               <X className="h-5 w-5" />
@@ -197,22 +196,11 @@ const Index = () => {
         <main className="flex-1 relative overflow-hidden">
           <MapCanvas />
 
-          {/* Mobile toggle for sidebar */}
-          {!isSidebarOpen && (
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => setIsSidebarOpen(true)}
-              className="absolute top-4 left-4 z-20 lg:hidden bg-card/90 backdrop-blur-sm shadow-md"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          )}
-
           {editingMode && (
             <EditNodeModal
               node={editingMode}
               onClose={() => setEditingMode(null)}
+              isBlock={false}
             />
           )}
         </main>
