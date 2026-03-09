@@ -35,7 +35,7 @@ const Index = () => {
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
-  const { setStartNode, setEndNode } = useNavigation();
+  const { setStartNode, setEndNode, clearPath } = useNavigation();
   const router = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -101,6 +101,7 @@ const Index = () => {
   };
 
   const handleAdminLogin = () => {
+    clearPath();
     router("/admin/login");
   };
 

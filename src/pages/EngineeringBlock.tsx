@@ -23,7 +23,7 @@ const EngineeringBlock = () => {
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
-  const { setStartNode, setEndNode, nodes } = useBlockNavigation();
+  const { setStartNode, setEndNode, nodes, clearPath } = useBlockNavigation();
 
   const router = useNavigate();
 
@@ -66,6 +66,7 @@ const EngineeringBlock = () => {
   };
 
   const handleAdminLogin = () => {
+    clearPath()
     router("/admin/login");
   };
 
@@ -178,7 +179,7 @@ const EngineeringBlock = () => {
 
               {/* Buttons */}
               <div className="flex flex-col gap-1.5">
-                {[0, 1, 2, 3].map((floor) => {
+                {[0, 1, 2].map((floor) => {
                   const isActive = currentFloor === floor;
 
                   return (
