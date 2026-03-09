@@ -18,7 +18,7 @@ export function BuildingLayer({
   const router = useNavigate();
 
   // fetch available building from db
-  const availableBlocksIds = ["69aeb09a35ad4682d1fe71ed"];
+  const availableBlocksIds = ["69af585dd5577184a5f30ec1"];
 
   const handleBuildingClick = (building: Building) => {
     console.log(building);
