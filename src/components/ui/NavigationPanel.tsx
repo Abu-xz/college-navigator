@@ -1,9 +1,9 @@
-import React from 'react';
-import { ArrowUpDown, X, Navigation } from 'lucide-react';
-import { useNavigation } from '@/hooks/useNavigation';
-import { Button } from '@/components/ui/button';
-import { LocationSelector } from './LocationSelector';
-import { InfoPanel } from './InfoPanel';
+import React from "react";
+import { ArrowUpDown, X, Navigation } from "lucide-react";
+import { useNavigation } from "@/hooks/useNavigation";
+import { Button } from "@/components/ui/button";
+import { LocationSelector } from "./LocationSelector";
+import { InfoPanel } from "./InfoPanel";
 
 export function NavigationPanel() {
   const {
@@ -25,7 +25,7 @@ export function NavigationPanel() {
           <Navigation className="h-5 w-5 text-primary" />
           <h2 className="font-semibold text-lg">Find Route</h2>
         </div>
-        
+
         {(startNode || endNode) && (
           <Button
             variant="ghost"
@@ -47,7 +47,7 @@ export function NavigationPanel() {
           onSelect={setStartNode}
           placeholder="Where are you now?"
         />
-        
+
         {/* Swap button */}
         {(startNode || endNode) && (
           <button
@@ -57,7 +57,7 @@ export function NavigationPanel() {
             <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
           </button>
         )}
-        
+
         <LocationSelector
           type="end"
           selectedNode={endNode}

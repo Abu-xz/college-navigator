@@ -9,21 +9,21 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { BlockAdminPanel } from "@/components/Admin/BlockAdminPanel";
 import { useNavigationStore } from "@/store/useNavigationStore";
 import { useBlockNavigationStore } from "@/store/useBlockNavigationStore";
-import { useAdminMode } from "@/hooks/useAdminMode";
 import EditNodeModal from "@/components/EditNodeModal";
 import { useBlockNavigation } from "@/hooks/useBlockNavigation";
+import { useBlockAdminMode } from "@/hooks/useBlockAdminMode";
 
 const EngineeringBlock = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { isAdminMode, fetchNodes, currentFloor, setCurrentFloor } =
     useBlockNavigationStore();
 
-  const { editingMode, setEditingMode } = useAdminMode();
+  const { editingMode, setEditingMode } = useBlockAdminMode();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const adminModeToggle = useNavigationStore().toggleAdminMode;
   const blockAdminModeToggle = useBlockNavigationStore().toggleAdminMode;
-  const { setStartNode, setEndNode, nodes } = useBlockNavigation();
+  const { setStartNode, setEndNode, nodes, clearPath } = useBlockNavigation();
 
   const router = useNavigate();
 
@@ -66,6 +66,7 @@ const EngineeringBlock = () => {
   };
 
   const handleAdminLogin = () => {
+    clearPath();
     router("/admin/login");
   };
 
@@ -169,7 +170,7 @@ const EngineeringBlock = () => {
           <EngineeringMap />
 
           {/* Floor selector */}
-          <div className="absolute top-40 left-3 z-50">
+          <div className="absolute top-52 right-3 z-50">
             <div className="backdrop-blur-md bg-white/85 border border-black/10 rounded-xl px-3 py-2 shadow-lg">
               {/* Header */}
               <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-700 text-center mb-2">
@@ -178,7 +179,7 @@ const EngineeringBlock = () => {
 
               {/* Buttons */}
               <div className="flex flex-col gap-1.5">
-                {[0, 1, 2, 3].map((floor) => {
+                {[0, 1, 2].map((floor) => {
                   const isActive = currentFloor === floor;
 
                   return (
@@ -237,7 +238,7 @@ const EngineeringBlock = () => {
           </div>
 
           {/* Mobile toggle for sidebar */}
-          {!isSidebarOpen && (
+          {/* {!isSidebarOpen && (
             <Button
               variant="secondary"
               size="icon"
@@ -246,12 +247,13 @@ const EngineeringBlock = () => {
             >
               <Menu className="h-5 w-5" />
             </Button>
-          )}
+          )} */}
 
           {editingMode && (
             <EditNodeModal
               node={editingMode}
               onClose={() => setEditingMode(null)}
+              isBlock={true}
             />
           )}
         </main>

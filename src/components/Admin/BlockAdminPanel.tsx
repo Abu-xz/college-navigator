@@ -11,6 +11,7 @@ import {
   X,
   Check,
   User,
+  Edit,
 } from "lucide-react";
 import { useAdminMode } from "@/hooks/useAdminMode";
 import { useNavigationStore } from "@/store/useNavigationStore";
@@ -42,6 +43,7 @@ export function BlockAdminPanel() {
     cancelConnection,
     newNodeType,
     setNewNodeType,
+    setEditingMode,
     exportData,
   } = useBlockAdminMode();
 
@@ -99,7 +101,7 @@ export function BlockAdminPanel() {
         {selectedNode && (
           <div className="mb-4 p-3 bg-card border border-border rounded-lg">
             <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-              Selected: {selectedNode.name} [{selectedNode.floor}]
+              Selected: {selectedNode.name}
             </p>
             <div className="flex flex-wrap gap-2">
               {isConnecting ? (
@@ -124,6 +126,18 @@ export function BlockAdminPanel() {
                 </Button>
               )}
               <Button
+                variant="default"
+                size="sm"
+                onClick={() => {
+                  console.log('edit modal click')
+                  setEditingMode(selectedNode);
+                }}
+                className="flex-1"
+              >
+                <Edit color="white" size={13} />
+                Edit
+              </Button>
+              <Button
                 variant="destructive"
                 size="sm"
                 onClick={() => deleteNode(selectedNode.id)}
@@ -139,23 +153,12 @@ export function BlockAdminPanel() {
                 {Math.round(selectedNode.y)})
               </p>
               <p>Connections: {selectedNode.connections.length}</p>
-              {/* Connection indicator */}
-              {isConnecting && connectionStart && (
-                <div className="mt-2 -translate-x-1/2 z-20 map-panel px-4 py-2 animate-fade-in border-accent">
-                  <div className="flex items-center gap-2">
-                    <Link2 className="h-4 w-4 text-accent" />
-                    <span className="text-sm">
-                      Connecting from <strong>{connectionStart.name}</strong>
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         )}
 
         {/* Export/Import */}
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -173,7 +176,7 @@ export function BlockAdminPanel() {
             <Download className="h-3 w-3 mr-1" />
             Export
           </Button>
-        </div>
+        </div> */}
       </div>
     </>
   );
