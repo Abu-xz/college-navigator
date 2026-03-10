@@ -68,6 +68,7 @@ const Index = () => {
 
   useEffect(() => {
     console.log("fetching buildings and nodes");
+
     fetchBuildings();
     fetchNodes();
   }, [fetchBuildings, fetchNodes]);

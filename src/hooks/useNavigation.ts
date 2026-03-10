@@ -18,6 +18,7 @@ export function useNavigation() {
     setSearchQuery,
     currentFloor,
     fetchNodes,
+    loading,
   } = useNavigationStore();
 
   // Get searchable locations (rooms and entrances)
@@ -106,6 +107,7 @@ export function useNavigation() {
     searchQuery,
     currentFloor,
     nodesOnCurrentFloor,
+    loading,
     
     // Computed
     searchableLocations,

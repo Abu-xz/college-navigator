@@ -62,6 +62,9 @@ interface NavigationStore {
   setNodes: (data: MapNode[]) => void;
   fetchNodes: () => Promise<void>;
 
+  // Loading State
+  loading: boolean;
+
   // Actions
   setStartNode: (node: MapNode | null) => void;
   setEndNode: (node: MapNode | null) => void;
@@ -128,6 +131,7 @@ export const useNavigationStore = create<NavigationStore>((set, get) => ({
   searchQuery: "",
   newNodeType: "WAYPOINT",
 
+  loading: false,
   // New Node type
   setNewNodeType: (type) => {
     set({ newNodeType: type });
@@ -144,6 +148,7 @@ export const useNavigationStore = create<NavigationStore>((set, get) => ({
   // Fetch Map Building data
   setBuildings: (data) => set({ buildings: data }),
   fetchBuildings: async () => {
+    set({ loading: true });
     try {
       const response = await buildingsService.getBuildings();
       const data = response.data;
@@ -152,6 +157,8 @@ export const useNavigationStore = create<NavigationStore>((set, get) => ({
       });
     } catch (error) {
       console.error("Failed to fetch buildings", error.response.data);
+    } finally {
+      set({ loading: false });
     }
   },
   // Fetch Map Nodes data

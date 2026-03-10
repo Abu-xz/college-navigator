@@ -33,6 +33,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
     nodesOnCurrentFloor,
     setStartNode,
     setEndNode,
+    loading,
   } = useNavigation();
 
   const {
@@ -43,13 +44,13 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
     selectNode,
     handleMapClick,
     createNodeAtPosition,
-    newNodeType
+    newNodeType,
   } = useAdminMode();
 
   // Handle SVG click
   const onSvgClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
-      console.log("triggered svg click")
+      console.log("triggered svg click");
       if (!svgRef.current) return;
 
       const rect = svgRef.current.getBoundingClientRect();
@@ -69,7 +70,7 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
   // Handle double click to create node in admin mode
   const onSvgDoubleClick = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
-      console.log("triggered double click")
+      console.log("triggered double click");
       if (!isAdminMode || !svgRef.current) return;
 
       const rect = svgRef.current.getBoundingClientRect();
@@ -122,6 +123,22 @@ export function MapCanvas({ width = 1000, height = 600 }: MapCanvasProps) {
     },
     [nodes, isAdminMode, startNode, endNode, setStartNode, setEndNode],
   );
+
+  if (loading)
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+        {/* Spinner */}
+        <div className="relative">
+          <div className="w-14 h-14 border-4 border-gray-200 rounded-full"></div>
+          <div className="absolute top-0 left-0 w-14 h-14 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+
+        {/* Loading Text */}
+        <p className="text-sm text-gray-500 tracking-wide">
+          Loading map data...
+        </p>
+      </div>
+    );
 
   return (
     <div className="relative w-full h-full bg-map-background rounded-lg overflow-hidden">
