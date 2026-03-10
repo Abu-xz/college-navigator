@@ -63,7 +63,8 @@ export function NodeLayer({
         }
 
         // Prevent another floor node display
-        if (node.floor !== currentFloor && node.type !== "STAIRS") return null;
+        if (node.floor !== currentFloor) return null;
+        // if (node.floor !== currentFloor && node.type !== "STAIRS") return null;
 
         // for admin connection purpose
         if (!isAdminMode && node.floor !== currentFloor) {
