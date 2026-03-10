@@ -152,7 +152,7 @@ export const useBlockNavigationStore = create<BlockNavigationStore>(
       try {
         const response = await mapNodesService.getMapNodes(
           "engineering",
-          // floor,
+          floor,
         );
         const data = response.data;
         console.log("fetched updated nodes");
