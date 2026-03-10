@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Map, Eye, EyeOff, ShieldCheck } from "lucide-react";
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState("admin@gmail.com");
-  const [password, setPassword] = useState("admin@123");
+  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
